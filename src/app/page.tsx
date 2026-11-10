@@ -7,12 +7,12 @@ export default function Home() {
         Tanish Jagadheshan
       </h1>
       <p className="mt-3 text-xl text-zinc-600 dark:text-zinc-400">
-        Information systems student building useful software for the web.
+        MS in Business Analytics student building useful software for the web.
       </p>
       <p className="mt-4 max-w-2xl leading-7 text-zinc-600 dark:text-zinc-400">
-        I&apos;m a student at Santa Clara University who enjoys turning ideas
-        into working tools — from command-line utilities to full web apps.
-        Take a look at what I&apos;ve been building.
+        I&apos;m an MS in Business Analytics student at Santa Clara University
+        who enjoys turning ideas into working tools — from command-line
+        utilities to full web apps. Take a look at what I&apos;ve been building.
       </p>
       <div className="mt-8">
         <Link

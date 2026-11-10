@@ -22,10 +22,9 @@ export default function AboutMePage() {
 
       <h2 className="mt-8 text-lg font-medium">Bio</h2>
       <p className="mt-2 max-w-2xl leading-7 text-zinc-600 dark:text-zinc-400">
-        I&apos;m Tanish Jagadheshan, an Information Systems student at Santa Clara
-        University. I like building software that solves everyday problems —
-        small tools, web apps, and data-driven dashboards. Away from the
-        keyboard, I enjoy hiking and pick-up basketball.
+        I&apos;m Tanish Jagadheshan, an MS in Business Analytics student at
+        Santa Clara University. I like building software that solves everyday
+        problems — small tools, web apps, and data-driven dashboards.
       </p>
 
       <h2 className="mt-8 text-lg font-medium">Skills</h2>
@@ -41,9 +40,10 @@ export default function AboutMePage() {
       </ul>
 
       <h2 className="mt-8 text-lg font-medium">Education</h2>
-      <p className="mt-2 max-w-2xl leading-7 text-zinc-600 dark:text-zinc-400">
-        B.S. in Information Systems — Santa Clara University
-      </p>
+      <ul className="mt-2 max-w-2xl list-disc space-y-1 pl-5 leading-7 text-zinc-600 dark:text-zinc-400">
+        <li>M.S. in Business Analytics — Santa Clara University</li>
+        <li>B.Tech in Electronics and Instrumentation Engineering</li>
+      </ul>
     </div>
   );
 }
