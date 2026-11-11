@@ -4,7 +4,8 @@ const links = [
   { href: "/", label: "Home" },
   { href: "/about-me", label: "About Me" },
   { href: "/projects", label: "Projects" },
-  { href: "/contact-me-server-form", label: "Contact" },
+  { href: "/contact-me", label: "Contact Me" },
+  { href: "/contact-me-server-form", label: "Contact (Server Form)" },
 ];
 
 export default function Navbar() {

@@ -29,6 +29,7 @@ Open http://localhost:3000 in your browser.
 | `/about-me`                    | Bio, skills, education                 |
 | `/projects`                    | Project cards, linked from `src/data/projects.ts` |
 | `/projects/[slug]`             | Project detail (unknown slugs get a friendly `not-found.tsx`) |
+| `/contact-me`                  | Contact form posting to `/api/contact` |
 | `/contact-me-server-form`      | Contact form posting to the API below  |
 
 ## Architecture
@@ -36,18 +37,22 @@ Open http://localhost:3000 in your browser.
 The contact form flow, top to bottom:
 
 ```
-src/app/contact-me-server-form/page.tsx      page (server component)
+src/app/contact-me/page.tsx             ┐ pages (server components)
+src/app/contact-me-server-form/page.tsx ┘
   └── src/components/ContactForm.tsx         form UI (client component)
-        │  fetch POST with { name, email, message }
+        │  fetch POST with { name, email, message } to the endpoint prop
+        │  (default /api/contact-server-form; /contact-me uses /api/contact)
         ▼
-src/app/api/contact-server-form/route.ts     route handler
-  ├── src/lib/validateContact.ts             trims input, applies field rules,
-  │                                          returns { valid, errors, data }
-  │                                          400 with field errors if invalid
-  └── src/lib/contactStore.ts                appends { id, name, email,
-      │                                      message, submittedAt }
-      ▼
-      data/contacts.json                     storage; written atomically via a
+src/app/api/contact-server-form/route.ts ┐ route handlers (POST), thin
+src/app/api/contact/route.ts             ┘ wrappers over shared logic
+  └── src/lib/contactRequest.ts              shared POST handling: parse body,
+        ├── src/lib/validateContact.ts       trims input, applies field rules,
+        │                                    returns { valid, errors, data }
+        │                                    400 with field errors if invalid
+        └── src/lib/contactStore.ts          appends { id, name, email,
+            │                                message, submittedAt }
+            ▼
+            data/contacts.json               storage; written atomically via a
                                              .tmp file + rename; a missing or
                                              empty file counts as [], while
                                              corrupt or non-array JSON throws

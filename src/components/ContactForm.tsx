@@ -96,7 +96,13 @@ function Field({
   );
 }
 
-export default function ContactForm() {
+type ContactFormProps = {
+  endpoint?: string;
+};
+
+export default function ContactForm({
+  endpoint = "/api/contact-server-form",
+}: ContactFormProps) {
   const [values, setValues] = useState<FormValues>(initialValues);
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
@@ -119,7 +125,7 @@ export default function ContactForm() {
     setFieldErrors({});
 
     try {
-      const response = await fetch("/api/contact-server-form", {
+      const response = await fetch(endpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(values),
