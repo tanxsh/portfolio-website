@@ -37,29 +37,46 @@ Open http://localhost:3000 in your browser.
 
 ## Architecture
 
-The contact form flow, top to bottom:
+### Contact form flow
 
+What happens when someone submits either contact page:
+
+```mermaid
+flowchart TD
+    A["Contact page<br/>/contact-me or /contact-me-server-form"] --> B["ContactForm.tsx<br/>form UI"]
+    B -->|"POST name, email, message"| C["API route<br/>/api/contact or /api/contact-server-form"]
+    C --> D["contactRequest.ts<br/>shared handler"]
+    D --> E["validateContact.ts<br/>checks the rules"]
+    E -->|invalid| F["400 + field errors<br/>shown under the fields"]
+    E -->|valid| G["contactStore.ts<br/>saves the entry"]
+    G --> H[("data/contacts.json")]
+    G -->|saved| I["201 success<br/>green message"]
+    G -->|write fails| J["500 error<br/>red message"]
 ```
-src/app/contact-me/page.tsx             ┐ pages (server components)
-src/app/contact-me-server-form/page.tsx ┘
-  └── src/components/ContactForm.tsx         form UI (client component)
-        │  fetch POST with { name, email, message } to the endpoint prop
-        │  (default /api/contact-server-form; /contact-me uses /api/contact)
-        ▼
-src/app/api/contact-server-form/route.ts ┐ route handlers (POST), thin
-src/app/api/contact/route.ts             ┘ wrappers over shared logic
-  └── src/lib/contactRequest.ts              shared POST handling: parse body,
-        ├── src/lib/validateContact.ts       trims input, applies field rules,
-        │                                    returns { valid, errors, data }
-        │                                    400 with field errors if invalid
-        └── src/lib/contactStore.ts          appends { id, name, email,
-            │                                message, submittedAt }
-            ▼
-            data/contacts.json               storage; written atomically via a
-                                             .tmp file + rename; a missing or
-                                             empty file counts as [], while
-                                             corrupt or non-array JSON throws
-                                             (500 response, file untouched)
+
+| Step | File | What it does |
+| ---- | ---- | ------------ |
+| Pages | `src/app/contact-me/page.tsx`, `src/app/contact-me-server-form/page.tsx` | Render the form. Each passes its own endpoint to the form. |
+| Form | `src/components/ContactForm.tsx` | Holds the field values, sends the POST, shows success, field errors or a failure message. It has no validation rules of its own. |
+| API routes | `src/app/api/contact/route.ts`, `src/app/api/contact-server-form/route.ts` | Thin wrappers that call the shared handler. |
+| Handler | `src/lib/contactRequest.ts` | Parses the request, validates, saves, and returns 400, 201 or 500. |
+| Validation | `src/lib/validateContact.ts` | Trims the values and applies the name, message and email rules. |
+| Storage | `src/lib/contactStore.ts` | Appends `{ id, name, email, message, submittedAt }` to `data/contacts.json`. |
+
+### Blog flow
+
+```mermaid
+flowchart TD
+    A["/admin/blogs<br/>BlogForm.tsx"] -->|"POST title, content"| B["/api/blogs"]
+    B --> C["blogRequest.ts<br/>validateBlog.ts"]
+    C -->|invalid| D["400 + field errors"]
+    C -->|valid| E["blogStore.ts<br/>creates slug, saves post"]
+    E --> F[("data/blogs.json")]
+    G["/blogs<br/>BlogList.tsx"] -->|"GET"| B
+    B -->|"all posts, newest first"| G
+    G -->|"click a post"| H["/blogs/slug<br/>looks the post up in blogStore.ts"]
+    H --> F
+    H -->|"unknown slug"| I["not-found page"]
 ```
 
 Notes:
