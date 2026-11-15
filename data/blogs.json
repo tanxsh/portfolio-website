@@ -1,0 +1,18 @@
+[
+  {
+    "id": "7c9e6679-7425-40de-944b-e07fc1f90ae7",
+    "slug": "hello-world",
+    "title": "Hello World",
+    "excerpt": "Why I started this blog and what I plan to write about: projects, coursework, and lessons learned along the way.",
+    "content": "Welcome to my blog! This is the first post.\n\nI plan to write about the projects I am working on, the courses I am taking at Santa Clara University, and the lessons I learn along the way. Thanks for reading!",
+    "createdAt": "2026-11-08T10:00:00.000Z"
+  },
+  {
+    "id": "a3b8c2d1-4e5f-4a6b-8c9d-0e1f2a3b4c5d",
+    "slug": "building-a-restock-planner",
+    "title": "Building a Restock Planner",
+    "excerpt": "How the restock feature in my Inventory CLI went from a plain low-stock list to a budgeted purchase plan.",
+    "content": "The restock command started as a simple low-stock report. It grew into something more useful: given a target quantity, it lists every product that is short, how many units to buy, and the total cost of the order.\n\nCalculating money with Python's Decimal type kept the totals exact, and writing results atomically kept the data file safe.",
+    "createdAt": "2026-11-09T09:30:00.000Z"
+  }
+]

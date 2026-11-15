@@ -71,3 +71,7 @@ Notes:
   the source of truth); `ContactForm` renders whatever errors the API returns
   and performs no client-side validation.
 - `data/contacts.json` is runtime data and git-ignored.
+- Blog posts live in `data/blogs.json` and are served by `/api/blogs`
+  (`GET` returns posts newest-first and is never cached; `POST` creates one),
+  handled by `src/lib/blogRequest.ts`. Both stores share the JSON file
+  helpers in `src/lib/jsonFileStore.ts`.
