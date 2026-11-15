@@ -34,12 +34,6 @@ type FieldProps = {
 
 const initialValues: FormValues = { name: "", email: "", message: "" };
 
-function inputClassName(hasError: boolean) {
-  return hasError
-    ? "w-full rounded-lg border border-red-500 bg-transparent px-3 py-2 text-sm focus:border-red-500 focus:outline-none"
-    : "w-full rounded-lg border border-zinc-300 bg-transparent px-3 py-2 text-sm focus:border-zinc-500 focus:outline-none dark:border-zinc-700 dark:focus:border-zinc-400";
-}
-
 function Field({
   id,
   label,
@@ -55,7 +49,7 @@ function Field({
 
   return (
     <div>
-      <label htmlFor={id} className="block text-sm font-medium">
+      <label htmlFor={id} className="field-label">
         {label}
       </label>
       {multiline ? (
@@ -68,7 +62,7 @@ function Field({
           disabled={disabled}
           aria-invalid={error ? true : undefined}
           aria-describedby={describedBy}
-          className={`mt-1.5 ${inputClassName(Boolean(error))}`}
+          className={`field-input mt-1.5 ${error ? "field-input-error" : ""}`}
         />
       ) : (
         <input
@@ -81,13 +75,13 @@ function Field({
           disabled={disabled}
           aria-invalid={error ? true : undefined}
           aria-describedby={describedBy}
-          className={`mt-1.5 ${inputClassName(Boolean(error))}`}
+          className={`field-input mt-1.5 ${error ? "field-input-error" : ""}`}
         />
       )}
       {error && (
         <p
           id={`${id}-error`}
-          className="mt-1 text-sm text-red-600 dark:text-red-400"
+            className="field-error"
         >
           {error}
         </p>
@@ -168,7 +162,7 @@ export default function ContactForm({
       {successMessage && (
         <p
           role="status"
-          className="rounded-lg border border-green-600 bg-green-50 px-4 py-3 text-sm font-medium text-green-800 dark:border-green-700 dark:bg-green-950 dark:text-green-300"
+          className="banner-success"
         >
           {successMessage}
         </p>
@@ -177,7 +171,7 @@ export default function ContactForm({
       {failureMessage && (
         <p
           role="alert"
-          className="rounded-lg border border-red-600 bg-red-50 px-4 py-3 text-sm font-medium text-red-800 dark:border-red-800 dark:bg-red-950 dark:text-red-300"
+          className="banner-error"
         >
           {failureMessage}
         </p>
@@ -217,7 +211,7 @@ export default function ContactForm({
       <button
         type="submit"
         disabled={submitting}
-        className="self-start rounded-full bg-foreground px-5 py-2.5 text-sm font-medium text-background transition-opacity hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
+        className="btn-primary self-start"
       >
         {submitting ? "Sending…" : "Send Message"}
       </button>

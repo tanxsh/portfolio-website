@@ -1,21 +1,42 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f9f8fb;
+  --foreground: #18181b;
+  --muted: #52525b;
+  --surface: #ffffff;
+  --edge: #e4e4e7;
+  --accent: #6d4fc4;
+  --accent-strong: #5b3fae;
+  --accent-soft: #f1ecfa;
+  --accent-contrast: #ffffff;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-surface: var(--surface);
+  --color-edge: var(--edge);
+  --color-accent: var(--accent);
+  --color-accent-strong: var(--accent-strong);
+  --color-accent-soft: var(--accent-soft);
+  --color-accent-contrast: var(--accent-contrast);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #09090b;
+    --foreground: #f4f4f5;
+    --muted: #a1a1aa;
+    --surface: #18181b;
+    --edge: #27272a;
+    --accent: #a78bfa;
+    --accent-strong: #c4b5fd;
+    --accent-soft: #201a30;
+    --accent-contrast: #09090b;
   }
 }
 
@@ -23,4 +44,54 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+.hero {
+  background: radial-gradient(
+    ellipse 70% 60% at 50% 0%,
+    var(--accent-soft),
+    transparent 70%
+  );
+}
+
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-accent px-6 py-3 text-sm font-medium text-accent-contrast shadow-sm transition-all hover:-translate-y-0.5 hover:bg-accent-strong hover:shadow-md disabled:cursor-not-allowed disabled:opacity-50;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full border border-edge bg-surface px-6 py-3 text-sm font-medium text-foreground transition-all hover:-translate-y-0.5 hover:border-accent hover:text-accent disabled:cursor-not-allowed disabled:opacity-50;
+  }
+
+  .card {
+    @apply rounded-2xl border border-edge bg-surface p-6 shadow-sm transition-all hover:-translate-y-0.5 hover:border-accent hover:shadow-md;
+  }
+
+  .pill {
+    @apply inline-flex items-center rounded-full bg-accent-soft px-3 py-1 text-xs font-medium text-accent;
+  }
+
+  .field-label {
+    @apply block text-sm font-medium text-foreground;
+  }
+
+  .field-input {
+    @apply w-full rounded-lg border border-edge bg-surface px-3 py-2 text-sm text-foreground transition-all focus:outline-none focus:ring-2 focus:ring-accent/40;
+  }
+
+  .field-input-error {
+    @apply border-red-500 focus:border-red-500 focus:ring-red-500/30;
+  }
+
+  .field-error {
+    @apply mt-1 text-sm text-red-600 dark:text-red-400;
+  }
+
+  .banner-success {
+    @apply rounded-lg border border-green-600 bg-green-50 px-4 py-3 text-sm font-medium text-green-800 dark:border-green-700 dark:bg-green-950 dark:text-green-300;
+  }
+
+  .banner-error {
+    @apply rounded-lg border border-red-600 bg-red-50 px-4 py-3 text-sm font-medium text-red-800 dark:border-red-800 dark:bg-red-950 dark:text-red-300;
+  }
 }

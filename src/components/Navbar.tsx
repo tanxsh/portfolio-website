@@ -1,26 +1,50 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 const links = [
   { href: "/", label: "Home" },
   { href: "/about-me", label: "About Me" },
   { href: "/projects", label: "Projects" },
+  { href: "/blogs", label: "Blogs" },
   { href: "/contact-me", label: "Contact Me" },
   { href: "/contact-me-server-form", label: "Contact (Server Form)" },
+  { href: "/admin/blogs", label: "Admin" },
 ];
 
 export default function Navbar() {
+  const pathname = usePathname();
+
+  function isActive(href: string) {
+    if (href === "/") {
+      return pathname === "/";
+    }
+    return pathname === href || pathname.startsWith(`${href}/`);
+  }
+
+  function linkClass(href: string) {
+    return isActive(href)
+      ? "rounded-full bg-accent-soft px-3 py-1.5 text-sm font-medium text-accent"
+      : "rounded-full px-3 py-1.5 text-sm text-muted transition-colors hover:text-foreground";
+  }
+
   return (
-    <header className="border-b border-zinc-200 dark:border-zinc-800">
-      <nav className="mx-auto flex w-full max-w-4xl items-center justify-between px-6 py-4">
-        <Link href="/" className="text-lg font-semibold tracking-tight">
+    <header className="sticky top-0 z-50 border-b border-edge bg-background/80 backdrop-blur">
+      <nav className="mx-auto flex w-full max-w-4xl flex-wrap items-center justify-between gap-x-4 gap-y-2 px-6 py-3">
+        <Link
+          href="/"
+          className="text-lg font-semibold tracking-tight text-foreground"
+        >
           My Portfolio
         </Link>
-        <ul className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm">
+        <ul className="flex flex-wrap items-center justify-end gap-x-1 gap-y-1">
           {links.map((link) => (
             <li key={link.href}>
               <Link
                 href={link.href}
-                className="text-zinc-600 transition-colors hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-50"
+                aria-current={isActive(link.href) ? "page" : undefined}
+                className={linkClass(link.href)}
               >
                 {link.label}
               </Link>

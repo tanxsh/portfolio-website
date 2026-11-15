@@ -29,6 +29,9 @@ Open http://localhost:3000 in your browser.
 | `/about-me`                    | Bio, skills, education                 |
 | `/projects`                    | Project cards, linked from `src/data/projects.ts` |
 | `/projects/[slug]`             | Project detail (unknown slugs get a friendly `not-found.tsx`) |
+| `/blogs`                       | Blog list, fetched client-side from `/api/blogs` |
+| `/blogs/[slug]`                | Blog post detail, read at request time (unknown slugs get a friendly `not-found.tsx`) |
+| `/admin/blogs`                 | Form to publish a post via `/api/blogs` |
 | `/contact-me`                  | Contact form posting to `/api/contact` |
 | `/contact-me-server-form`      | Contact form posting to the API below  |
 

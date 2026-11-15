@@ -15,18 +15,24 @@ export default function ProjectsPage() {
       </p>
       <ul className="mt-8 grid gap-4 sm:grid-cols-2">
         {projects.map((project) => (
-          <li key={project.slug}>
+          <li key={project.slug} className="h-full">
             <Link
               href={`/projects/${project.slug}`}
-              className="block h-full rounded-xl border border-zinc-200 p-6 transition-colors hover:border-zinc-400 dark:border-zinc-800 dark:hover:border-zinc-600"
+              className="card flex h-full flex-col"
             >
-              <h2 className="font-medium">{project.title}</h2>
-              <p className="mt-2 text-sm leading-6 text-zinc-600 dark:text-zinc-400">
+              <h2 className="text-base font-medium text-foreground">
+                {project.title}
+              </h2>
+              <p className="mt-2 flex-1 text-sm leading-6 text-muted">
                 {project.summary}
               </p>
-              <p className="mt-3 text-xs text-zinc-500 dark:text-zinc-500">
-                {project.tech.join(" · ")}
-              </p>
+              <ul className="mt-4 flex flex-wrap gap-2">
+                {project.tech.map((item) => (
+                  <li key={item} className="pill">
+                    {item}
+                  </li>
+                ))}
+              </ul>
             </Link>
           </li>
         ))}
