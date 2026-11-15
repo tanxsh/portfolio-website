@@ -73,8 +73,64 @@ Notes:
 - Validation rules live only in `src/lib/validateContact.ts` (the server is
   the source of truth); `ContactForm` renders whatever errors the API returns
   and performs no client-side validation.
-- `data/contacts.json` is runtime data and git-ignored.
+- `data/contacts.json` is runtime data (committed as an empty `[]`; the app
+  appends submissions to it).
 - Blog posts live in `data/blogs.json` and are served by `/api/blogs`
   (`GET` returns posts newest-first and is never cached; `POST` creates one),
   handled by `src/lib/blogRequest.ts`. Both stores share the JSON file
   helpers in `src/lib/jsonFileStore.ts`.
+- `/admin/blogs` has no authentication (not required by the assignment), so
+  anyone who knows the URL can publish a post.
+
+## Part 2: Critique of the generated code
+
+Three examples of reviewing what the Viber agent produced.
+
+### 1. One shared handler for both contact endpoints
+
+- **Files / commit:** `src/lib/contactRequest.ts`,
+  `src/app/api/contact/route.ts`, `src/app/api/contact-server-form/route.ts`
+  (commit `8543f68`)
+- **What the agent proposed:** my prompt asked for a new `/api/contact`
+  endpoint without copying logic. The agent moved the existing route's body
+  into `handleContactPost` in `contactRequest.ts` and made both route files
+  thin wrappers around it.
+- **What I decided and why:** I accepted it. Validation and saving now live in
+  one place, so both contact pages behave the same and write to the same
+  `data/contacts.json`.
+- **How I checked it:** I sent POST requests with `curl` to both endpoints.
+  A valid body returned 201 on both, a blank name with the email `a@b`
+  returned 400 with field errors, and malformed JSON returned 400. Both valid
+  submissions appeared in the same `data/contacts.json`.
+
+### 2. Blog pages that show new posts without a rebuild
+
+- **Files / commit:** `src/app/blogs/[slug]/page.tsx`,
+  `src/components/BlogList.tsx` (commit `85328de`)
+- **What the agent proposed:** `next.config.ts` enables `cacheComponents`,
+  where `export const dynamic = "force-dynamic"` is not allowed. The agent
+  instead awaited `connection()` inside a `<Suspense>` boundary on the post
+  page, avoided `generateStaticParams` for blog slugs, and had `/blogs` fetch
+  `GET /api/blogs` in the browser.
+- **What I decided and why:** I accepted it. Posts are created at runtime, so
+  a statically generated page would not show a new post until a rebuild.
+- **How I checked it:** I published a post at `/admin/blogs`, then opened
+  `/blogs` and the new post's `/blogs/<slug>` page, first in dev and then
+  after `npm run build` and `npm run start`. The post saved and appeared
+  immediately in both, and an unknown slug showed the "not found" page.
+
+### 3. Form inputs disappeared after the restyle
+
+- **Files / commit:** `src/app/globals.css`, `src/components/ContactForm.tsx`
+  (commit `85328de`)
+- **What the agent proposed:** in the UI polish it moved the input, label and
+  banner styles into shared classes (`.field-input`, `.field-label`,
+  `.banner-success`) in `globals.css`.
+- **What I decided and why:** I kept that design, because it removes repeated
+  long class lists. But on my running dev server the form fields were
+  invisible: the classes were on the elements, but the served stylesheet did
+  not contain them.
+- **How I checked it:** the production build's CSS did contain the classes,
+  so the code was correct and the dev server was serving stale CSS. I stopped
+  the dev server, deleted `.next`, and restarted it. After that the Name,
+  Email and Message boxes rendered correctly.
