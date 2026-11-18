@@ -36,46 +36,50 @@ export default function RadarBoard({
 }: RadarBoardProps) {
   return (
     <div className="mt-4">
-      <div className="flex flex-wrap justify-center gap-2">
-        {FILTER_CATEGORIES.map((category) => {
-          const active = category === selectedCategory;
-          const style = CATEGORY_STYLES[category];
+      <div className="xl:grid xl:grid-cols-[1fr_auto_1fr] xl:gap-8">
+        <div aria-hidden="true" />
 
-          return (
-            <button
-              key={category}
-              type="button"
-              onClick={() => onSelectCategory(category)}
-              className={`rounded-full border px-4 py-1.5 text-sm font-medium transition-colors ${
-                active
-                  ? style
-                    ? `${style.chipActive} text-white`
-                    : "border-accent bg-accent text-accent-contrast"
-                  : style
-                    ? `${style.chipText} border-edge`
-                    : "border-edge text-muted"
-              }`}
-            >
-              {category}
-            </button>
-          );
-        })}
-      </div>
+        <div
+          className="mx-auto w-full"
+          style={{
+            width: "max(360px, min(100%, 880px, calc(100svh - 11rem)))",
+          }}
+        >
+          <RadarChart
+            items={items}
+            selectedId={selectedId}
+            onSelect={onSelect}
+            hoveredId={hoveredId}
+            onHover={onHover}
+            selectedCategory={selectedCategory}
+          />
+        </div>
 
-      <div
-        className="mx-auto mt-4 w-full"
-        style={{
-          width: "max(360px, min(100%, 760px, calc(100svh - 14.5rem)))",
-        }}
-      >
-        <RadarChart
-          items={items}
-          selectedId={selectedId}
-          onSelect={onSelect}
-          hoveredId={hoveredId}
-          onHover={onHover}
-          selectedCategory={selectedCategory}
-        />
+        <aside className="mt-6 flex flex-wrap gap-1.5 xl:mt-0 xl:w-56 xl:flex-col xl:items-start xl:self-start">
+          {FILTER_CATEGORIES.map((category) => {
+            const active = category === selectedCategory;
+            const style = CATEGORY_STYLES[category];
+
+            return (
+              <button
+                key={category}
+                type="button"
+                onClick={() => onSelectCategory(category)}
+                className={`rounded-md border px-2 py-1 text-xs font-medium transition-colors ${
+                  active
+                    ? style
+                      ? `${style.chipActive} text-white`
+                      : "border-accent bg-accent text-accent-contrast"
+                    : style
+                      ? `${style.chipText} ${style.tint} ${style.borderSoft} ${style.tintHover}`
+                      : "border-edge text-muted hover:bg-accent-soft"
+                }`}
+              >
+                {category}
+              </button>
+            );
+          })}
+        </aside>
       </div>
 
       <section className="mt-12">
