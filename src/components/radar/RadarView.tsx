@@ -7,6 +7,8 @@ import type { RadarItem } from "@/lib/radarStore";
 export default function RadarView() {
   const [items, setItems] = useState<RadarItem[] | null>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [hoveredId, setHoveredId] = useState<string | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState("All");
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -50,6 +52,10 @@ export default function RadarView() {
           items={items}
           selectedId={selectedId}
           onSelect={setSelectedId}
+          hoveredId={hoveredId}
+          onHover={setHoveredId}
+          selectedCategory={selectedCategory}
+          onSelectCategory={setSelectedCategory}
         />
       )}
     </div>
