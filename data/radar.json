@@ -1,100 +1,268 @@
 [
   {
-    "id": "35dbd279-bdfd-458b-b0cc-8b7ddc0e3e4b",
+    "id": "54e6de5d-276e-4e52-b23d-37b2f5bc27d3",
     "name": "Python",
     "category": "Languages",
     "ring": "Adopt",
-    "note": "My main language for ML, data pipelines and APIs"
+    "note": ""
   },
   {
-    "id": "de727439-b6b1-4eda-868b-99122ee56892",
+    "id": "beabbf55-3632-443f-a12a-b433e4291ba3",
     "name": "SQL",
     "category": "Languages",
     "ring": "Adopt",
-    "note": "Everyday tool for data work"
+    "note": ""
   },
   {
-    "id": "3b8084f3-5417-4fe7-b663-9028cf59cfe9",
-    "name": "R",
-    "category": "Languages",
-    "ring": "Trial",
-    "note": "Used for statistics and optimization coursework"
+    "id": "2601845a-3e65-4d59-969c-13a0d04b027a",
+    "name": "NumPy",
+    "category": "Frameworks & Libraries",
+    "ring": "Adopt",
+    "note": ""
   },
   {
-    "id": "05f77213-4883-4ab0-b559-24f339b8ea06",
+    "id": "504b9e0a-2233-4aed-bc1f-99d14cbe38ed",
+    "name": "Pandas",
+    "category": "Frameworks & Libraries",
+    "ring": "Adopt",
+    "note": ""
+  },
+  {
+    "id": "b62c3182-ec3e-486b-a039-76d52607caad",
+    "name": "Claude Code",
+    "category": "Platforms & Tools",
+    "ring": "Adopt",
+    "note": ""
+  },
+  {
+    "id": "596a648e-e63f-4a0d-9015-1af705b883bd",
+    "name": "Claude API",
+    "category": "Platforms & Tools",
+    "ring": "Adopt",
+    "note": ""
+  },
+  {
+    "id": "a55c8e53-bd32-4640-ae30-e9b6eedccc99",
+    "name": "OpenAI API",
+    "category": "Platforms & Tools",
+    "ring": "Adopt",
+    "note": ""
+  },
+  {
+    "id": "ed6a3158-ff17-4494-8596-6745b25ce1df",
+    "name": "Vector Databases",
+    "category": "Platforms & Tools",
+    "ring": "Adopt",
+    "note": ""
+  },
+  {
+    "id": "7973b62e-bf83-4d4a-9798-d417abcab822",
+    "name": "Large Language Models",
+    "category": "Techniques",
+    "ring": "Adopt",
+    "note": ""
+  },
+  {
+    "id": "8bea0980-ceeb-4f76-8b10-be339c6cd738",
+    "name": "Retrieval-Augmented Generation",
+    "category": "Techniques",
+    "ring": "Adopt",
+    "note": ""
+  },
+  {
+    "id": "af2de670-a8dc-44f7-8064-e437e17be80d",
+    "name": "Multi-Agent Systems",
+    "category": "Techniques",
+    "ring": "Adopt",
+    "note": ""
+  },
+  {
+    "id": "22d2076e-c752-4c5e-aafe-cb19df85adba",
+    "name": "Machine Learning",
+    "category": "Techniques",
+    "ring": "Adopt",
+    "note": ""
+  },
+  {
+    "id": "c960dec2-c632-4bb2-81cb-0c02c8b2d831",
     "name": "TypeScript",
     "category": "Languages",
     "ring": "Trial",
-    "note": "Used for this portfolio and React work"
+    "note": ""
   },
   {
-    "id": "d765713b-02b3-4054-a1e7-d05850e096e9",
-    "name": "FastAPI",
-    "category": "Frameworks",
-    "ring": "Adopt",
-    "note": "Backend for my AI applications"
-  },
-  {
-    "id": "a8991a49-18ea-4f5d-945e-289d822ce515",
-    "name": "Next.js",
-    "category": "Frameworks",
-    "ring": "Trial",
-    "note": "Powers this portfolio"
-  },
-  {
-    "id": "dd39e455-0211-4678-8b95-4d042ef3aed0",
-    "name": "LangGraph",
-    "category": "Frameworks",
-    "ring": "Adopt",
-    "note": "My go-to for multi-agent pipelines"
-  },
-  {
-    "id": "d753db3c-2fb1-418c-a2fd-f2dd34598979",
+    "id": "efac2a92-7e4f-4871-b24f-b41fcbcd2fef",
     "name": "LangChain",
-    "category": "Frameworks",
-    "ring": "Adopt",
-    "note": "Building blocks for RAG applications"
-  },
-  {
-    "id": "6db2ca3d-b04c-4eac-b206-90a913d362de",
-    "name": "ChromaDB",
-    "category": "Tools",
-    "ring": "Adopt",
-    "note": "Local vector database for retrieval"
-  },
-  {
-    "id": "87b99ce9-06a6-4076-883a-d20b6c3b0d76",
-    "name": "XGBoost",
-    "category": "Tools",
-    "ring": "Adopt",
-    "note": "Strong default for tabular prediction"
-  },
-  {
-    "id": "bcd3bab3-97b4-4281-821e-bb64c21cd239",
-    "name": "Docker",
-    "category": "Tools",
+    "category": "Frameworks & Libraries",
     "ring": "Trial",
-    "note": "Packaging and running services"
+    "note": ""
   },
   {
-    "id": "c0195995-513f-4891-88d0-46460511351f",
-    "name": "Kubernetes",
-    "category": "Tools",
+    "id": "34605346-edc5-4397-9487-cb3d5cad34e8",
+    "name": "LangGraph",
+    "category": "Frameworks & Libraries",
+    "ring": "Trial",
+    "note": ""
+  },
+  {
+    "id": "90e11444-6098-4830-b244-af47a40bfa0c",
+    "name": "Sentence Transformers",
+    "category": "Frameworks & Libraries",
+    "ring": "Trial",
+    "note": ""
+  },
+  {
+    "id": "d76efe95-7a83-4bff-8104-5fa37b1df453",
+    "name": "React",
+    "category": "Frameworks & Libraries",
+    "ring": "Trial",
+    "note": ""
+  },
+  {
+    "id": "02b25567-7df7-4aff-9493-e847014c80ff",
+    "name": "FastAPI",
+    "category": "Frameworks & Libraries",
+    "ring": "Trial",
+    "note": ""
+  },
+  {
+    "id": "f2e77db6-d217-4677-b4c7-23df8db26559",
+    "name": "Flask",
+    "category": "Frameworks & Libraries",
+    "ring": "Trial",
+    "note": ""
+  },
+  {
+    "id": "5e448caa-aef9-4221-ba0e-fb9c50ee236a",
+    "name": "AWS",
+    "category": "Platforms & Tools",
+    "ring": "Trial",
+    "note": ""
+  },
+  {
+    "id": "cc2b2fe4-2c7d-410e-851a-b859ce367c62",
+    "name": "LLM Evaluation",
+    "category": "Techniques",
+    "ring": "Trial",
+    "note": ""
+  },
+  {
+    "id": "d233788f-e7f4-4aa3-86ab-b8a1b7b3f61d",
+    "name": "LLM-as-a-Judge",
+    "category": "Techniques",
+    "ring": "Trial",
+    "note": ""
+  },
+  {
+    "id": "85137129-d5e4-4463-8790-a6143e97ef01",
+    "name": "Prompt Engineering",
+    "category": "Techniques",
+    "ring": "Trial",
+    "note": ""
+  },
+  {
+    "id": "48e45421-d05c-4dc1-8014-81e6a8badb4a",
+    "name": "REST APIs",
+    "category": "Techniques",
+    "ring": "Trial",
+    "note": ""
+  },
+  {
+    "id": "2e12f04d-ceae-429c-8856-a70c7ac0153a",
+    "name": "Hugging Face",
+    "category": "Frameworks & Libraries",
     "ring": "Assess",
-    "note": "Learning container orchestration"
+    "note": ""
   },
   {
-    "id": "081f836d-99b5-42f3-8a74-43c6ac23943c",
-    "name": "Hybrid search with reranking",
-    "category": "Practices",
-    "ring": "Adopt",
-    "note": "BM25 plus embeddings plus a cross-encoder improves grounding"
+    "id": "847c2362-29cc-438d-b354-eb2550016c92",
+    "name": "Docker",
+    "category": "Platforms & Tools",
+    "ring": "Assess",
+    "note": ""
   },
   {
-    "id": "c327a76e-cfff-4b13-b636-15de6598f19f",
-    "name": "LLM-as-a-judge",
-    "category": "Practices",
-    "ring": "Trial",
-    "note": "Useful for evaluating RAG answers"
+    "id": "5c4d35c7-ddad-4572-aab2-4fd466106c94",
+    "name": "Kubernetes",
+    "category": "Platforms & Tools",
+    "ring": "Assess",
+    "note": ""
+  },
+  {
+    "id": "9642ec01-a218-4e7a-817b-014ac26916e6",
+    "name": "CI/CD",
+    "category": "Platforms & Tools",
+    "ring": "Assess",
+    "note": ""
+  },
+  {
+    "id": "4bd2fc65-89b2-466e-8686-83a9287915da",
+    "name": "R",
+    "category": "Languages",
+    "ring": "Hold",
+    "note": ""
+  },
+  {
+    "id": "62685058-4774-4ddb-8040-ec70562e2499",
+    "name": "C",
+    "category": "Languages",
+    "ring": "Hold",
+    "note": ""
+  },
+  {
+    "id": "10d4ad89-d9aa-453c-a899-70517a21534f",
+    "name": "C++",
+    "category": "Languages",
+    "ring": "Hold",
+    "note": ""
+  },
+  {
+    "id": "d4364718-6b95-435c-8d27-0bfe9789b94f",
+    "name": "Matplotlib",
+    "category": "Frameworks & Libraries",
+    "ring": "Hold",
+    "note": ""
+  },
+  {
+    "id": "7a40f210-d90f-47a6-a0c6-25d51102bd1a",
+    "name": "Scikit-learn",
+    "category": "Frameworks & Libraries",
+    "ring": "Hold",
+    "note": ""
+  },
+  {
+    "id": "17d8ef65-733a-4cc9-8e70-c01ccc05ee7f",
+    "name": "Predictive Modeling",
+    "category": "Techniques",
+    "ring": "Hold",
+    "note": ""
+  },
+  {
+    "id": "b86f615c-187a-4948-be4d-640cc4d1f687",
+    "name": "Neural Networks",
+    "category": "Techniques",
+    "ring": "Hold",
+    "note": ""
+  },
+  {
+    "id": "5d7a0336-9409-4bfe-8288-de9204a9b7d5",
+    "name": "Feature Engineering",
+    "category": "Techniques",
+    "ring": "Hold",
+    "note": ""
+  },
+  {
+    "id": "b3adf7d7-32ab-4896-8870-7c50396d7c4f",
+    "name": "Hyperparameter Tuning",
+    "category": "Techniques",
+    "ring": "Hold",
+    "note": ""
+  },
+  {
+    "id": "4502d416-470e-4b86-b031-edefbe974312",
+    "name": "ETL",
+    "category": "Techniques",
+    "ring": "Hold",
+    "note": ""
   }
 ]

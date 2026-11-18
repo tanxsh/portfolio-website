@@ -95,3 +95,34 @@ body {
     @apply rounded-lg border border-red-600 bg-red-50 px-4 py-3 text-sm font-medium text-red-800 dark:border-red-800 dark:bg-red-950 dark:text-red-300;
   }
 }
+
+@keyframes radar-pulse {
+  0%,
+  100% {
+    text-shadow: 0 0 3px rgb(239 68 68 / 0.2);
+  }
+
+  50% {
+    text-shadow:
+      0 0 10px rgb(239 68 68 / 0.55),
+      0 0 20px rgb(239 68 68 / 0.25);
+  }
+}
+
+.radar-pulse {
+  color: #dc2626;
+  animation: radar-pulse 3s ease-in-out infinite;
+}
+
+@media (prefers-color-scheme: dark) {
+  .radar-pulse {
+    color: #f87171;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .radar-pulse {
+    animation: none;
+    text-shadow: 0 0 3px rgb(239 68 68 / 0.2);
+  }
+}

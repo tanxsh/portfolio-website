@@ -209,7 +209,7 @@ export default function RadarForm({ item, onSaved, onReset }: RadarFormProps) {
 
       <div>
         <label htmlFor="note" className="field-label">
-          Note
+          Note (optional)
         </label>
         <textarea
           id="note"

@@ -52,7 +52,7 @@ describe("validateRadarItem", () => {
 
     expect(result.valid).toBe(false);
     expect(result.errors.category).toBe(
-      "Category must be one of: Languages, Frameworks, Tools, Practices.",
+      "Category must be one of: Languages, Frameworks & Libraries, Platforms & Tools, Techniques.",
     );
   });
 
@@ -82,11 +82,14 @@ describe("validateRadarItem", () => {
     }
   });
 
-  it("requires a non-blank note", () => {
-    const result = validateRadarItem({ ...validItem, note: "" });
+  it("allows a blank note", () => {
+    for (const note of ["", "   "]) {
+      const result = validateRadarItem({ ...validItem, note });
 
-    expect(result.valid).toBe(false);
-    expect(result.errors.note).toBe("Note is required.");
+      expect(result.valid).toBe(true);
+      expect(result.errors.note).toBeUndefined();
+      expect(result.data.note).toBe("");
+    }
   });
 
   it("rejects a note longer than 200 characters", () => {

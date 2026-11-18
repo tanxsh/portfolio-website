@@ -7,7 +7,7 @@ const links = [
   { href: "/", label: "Home" },
   { href: "/about-me", label: "About Me" },
   { href: "/projects", label: "Projects" },
-  { href: "/radar", label: "Radar" },
+  { href: "/radar", label: "Tech Radar" },
   { href: "/blogs", label: "Blogs" },
   { href: "/contact-me", label: "Contact Me" },
   { href: "/contact-me-server-form", label: "Contact (Server Form)" },
@@ -45,7 +45,9 @@ export default function Navbar() {
               <Link
                 href={link.href}
                 aria-current={isActive(link.href) ? "page" : undefined}
-                className={linkClass(link.href)}
+                className={`${linkClass(link.href)}${
+                  link.href === "/radar" ? " radar-pulse" : ""
+                }`}
               >
                 {link.label}
               </Link>

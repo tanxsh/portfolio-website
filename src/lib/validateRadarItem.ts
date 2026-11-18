@@ -1,8 +1,8 @@
 export const RADAR_CATEGORIES = [
   "Languages",
-  "Frameworks",
-  "Tools",
-  "Practices",
+  "Frameworks & Libraries",
+  "Platforms & Tools",
+  "Techniques",
 ] as const;
 
 export const RADAR_RINGS = ["Adopt", "Trial", "Assess", "Hold"] as const;
@@ -54,9 +54,7 @@ export function validateRadarItem(input: RadarFields): RadarValidation {
     errors.ring = `Ring must be one of: ${RADAR_RINGS.join(", ")}.`;
   }
 
-  if (data.note.length === 0) {
-    errors.note = "Note is required.";
-  } else if (data.note.length > NOTE_MAX_LENGTH) {
+  if (data.note.length > NOTE_MAX_LENGTH) {
     errors.note = `Note must be at most ${NOTE_MAX_LENGTH} characters.`;
   }
 

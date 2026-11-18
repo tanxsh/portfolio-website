@@ -6,6 +6,7 @@ import type { RadarItem } from "@/lib/radarStore";
 
 export default function RadarView() {
   const [items, setItems] = useState<RadarItem[] | null>(null);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -44,7 +45,13 @@ export default function RadarView() {
         <p className="mt-8 text-muted">Loading radar…</p>
       )}
 
-      {items !== null && <RadarBoard items={items} />}
+      {items !== null && (
+        <RadarBoard
+          items={items}
+          selectedId={selectedId}
+          onSelect={setSelectedId}
+        />
+      )}
     </div>
   );
 }

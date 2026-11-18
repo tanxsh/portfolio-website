@@ -103,7 +103,6 @@ describe("handleRadarPost", () => {
     expect(body.errors.name).toBeDefined();
     expect(body.errors.category).toBeDefined();
     expect(body.errors.ring).toBeDefined();
-    expect(body.errors.note).toBeDefined();
   });
 
   it("returns 400 when fields have non-string types", async () => {
@@ -116,7 +115,6 @@ describe("handleRadarPost", () => {
     expect(body.errors.name).toBeDefined();
     expect(body.errors.category).toBeDefined();
     expect(body.errors.ring).toBeDefined();
-    expect(body.errors.note).toBeDefined();
     expect(vi.mocked(createRadarItem)).not.toHaveBeenCalled();
   });
 
