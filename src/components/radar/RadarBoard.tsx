@@ -83,7 +83,7 @@ export default function RadarBoard({
       <div
         className="mx-auto mt-4 w-full"
         style={{
-          width: "max(340px, min(100%, 720px, calc(100svh - 17rem)))",
+          width: "max(360px, min(100%, 760px, calc(100svh - 14.5rem)))",
         }}
       >
         <RadarChart
