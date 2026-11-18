@@ -1,0 +1,99 @@
+[
+  {
+    "id": "115e22c3-981e-41b6-af11-ba2eb67180b7",
+    "slug": "inventory-cli",
+    "title": "Inventory CLI with Restock Planner",
+    "summary": "A Python command-line tool for tracking store inventory, with a restock planner that turns a stock target into a shopping list and a budget.",
+    "description": "Tracks a store's products from the terminal with add, list, get, update and delete commands, saving everything to a local JSON file. The custom restock command takes a minimum stock target and lists every product that falls short, how many units to buy and what each purchase costs, plus the total budget. Money is calculated with Python's Decimal to avoid rounding errors, IDs are never reused, and every write goes to a temporary file that is swapped in, so a failed command can't corrupt the data.",
+    "tech": [
+      "Python 3",
+      "Standard Library",
+      "JSON",
+      "CLI Design"
+    ],
+    "link": "https://github.com/tanxsh/Inventory-CLI-with-Restock-Planner"
+  },
+  {
+    "id": "f05396c5-7b68-4a89-bd3e-131ec52542bd",
+    "slug": "multi-agent-rag-research-assistant",
+    "title": "Multi-Agent RAG Research Assistant",
+    "summary": "A fully local multi-agent assistant that answers questions about your PDFs and falls back to general knowledge when the documents don't help.",
+    "description": "Upload PDFs and ask questions. A LangGraph pipeline of five agents handles each one: a Router decides whether it's about the documents, a Retriever pulls the best chunks from ChromaDB, an Analyzer checks that they actually answer the question, and a Synthesizer writes the grounded answer. If the context is judged irrelevant, the question is rerouted to a Generalist agent instead of producing an invented answer. Everything runs on your own machine with Llama 3.2 through Ollama and local embeddings, so there are no API costs and no data leaves the device. Built for Generative AI for the Enterprise at Santa Clara University.",
+    "tech": [
+      "LangGraph",
+      "LangChain",
+      "Llama 3.2",
+      "Ollama",
+      "ChromaDB",
+      "HuggingFace Embeddings",
+      "Streamlit",
+      "Python"
+    ],
+    "link": "https://github.com/tanxsh/Multi-Agent-RAG-Research-Assistant"
+  },
+  {
+    "id": "90d0f965-70ac-4ba6-8e22-5da29dd3ae45",
+    "slug": "airbnb-california-market-analysis",
+    "title": "Airbnb California Market Analysis",
+    "summary": "Finds what drives Airbnb demand across 8 California markets, segments listings into three tiers, and tests whether segment-specific models beat a single global one.",
+    "description": "Using Inside Airbnb data for eight California markets, with reviews per month as the demand proxy, this project asks what drives demand, what kinds of listings exist, and whether grouping listings improves predictions. Linear Regression, Random Forest and a tuned XGBoost model were compared, and K-Means (k = 3, with a silhouette score of 0.40) split listings into budget, mid-tier and premium segments. The best segment-specific XGBoost model then beat the global baseline (R² 0.5194 vs 0.4830), showing that demand behaves differently across segments. It closes with recommendations for hosts and platform strategists.",
+    "tech": [
+      "Python",
+      "XGBoost",
+      "Random Forest",
+      "K-Means",
+      "DBSCAN",
+      "scikit-learn",
+      "pandas",
+      "Jupyter"
+    ],
+    "link": "https://github.com/tanxsh/Machine-Learning-Python-Project"
+  },
+  {
+    "id": "cc514ed6-b41d-427d-a4c8-fcd613221920",
+    "slug": "scu-analytics-showdown-spring-2026-roots-returns",
+    "title": "SCU Analytics Showdown (Spring 2026): Roots & Returns",
+    "summary": "Winning submission that predicts which Zambian farmers won't sell their harvest back, using a two-stage XGBoost model.",
+    "description": "Good Nature Agro lends seeds, fungicide and fertilizer to smallholder farmers in Zambia, and 23.3% of them never sell their harvest back. This project builds a two-stage model: an XGBoost classifier predicts whether a farmer will sell back at all (AUC 0.88), and a regressor estimates how much they will deliver (RMSE 594 kg). Farmers are then sorted into high, medium and low risk tiers. Flagging the riskiest 27% of farmers catches 74% of all non-sellers. SHAP analysis showed that fungicide is the biggest controllable driver of yield, and that first-season farmers drop out at 27.7%, about 20 times the rate of experienced ones.",
+    "tech": [
+      "Python",
+      "XGBoost",
+      "SHAP",
+      "scikit-learn",
+      "pandas",
+      "Streamlit"
+    ],
+    "link": "https://github.com/tanxsh/SCU-Analytics-Showdown-Spring-2026"
+  },
+  {
+    "id": "ad38a14b-4db7-418e-81e0-131a23030677",
+    "slug": "optimizing-support-staffing-at-tesla",
+    "title": "Optimizing Support Staffing at Tesla",
+    "summary": "A linear programming model in R that finds the cheapest weekly staffing plan for Tesla's post-sales support center, and shows bilingual agents cut costs.",
+    "description": "A group project for Mathematics for Business and Analytics with R at Santa Clara University. The model decides how many full-time and part-time agents to schedule in each two-hour slot so every call is answered at the lowest weekly cost, given an 80/20 English–Spanish call mix, standard and evening wages, and the rule that part-timers handle English only. Three scenarios were solved: separate language pools ($5,100 a week), restricted shift availability (the same $5,100 with a different plan), and a bilingual pool (37 agents instead of 40, $4,680 a week). That saves $420 a week, and Tesla could pay bilingual agents up to 9% more per hour before losing the advantage.",
+    "tech": [
+      "R",
+      "lpSolve",
+      "Linear Programming",
+      "Optimization"
+    ],
+    "link": "https://github.com/tanxsh/CaseStudy-Optimization-of-Staffing-at-Tesla"
+  },
+  {
+    "id": "6a007b34-f802-4e63-a37f-152b0b63d6ad",
+    "slug": "behind-the-wheel-california-traffic-collisions",
+    "title": "Behind the Wheel: California Traffic Collisions",
+    "summary": "Exploratory analysis of 2M+ California crash records from 2020 to 2025: where, who and why collisions happen.",
+    "description": "Merged six years of California Highway Patrol crash and party data, then analyzed it across all 58 counties for Data Analytics with Python. A weighted severity score (injuries plus three times fatalities) made crashes comparable. Los Angeles County alone accounts for over a quarter of statewide collisions, drivers aged 0–17 show the highest average severity, and most crashes happen in clear weather and daylight, pointing to human error rather than conditions. Speeding and unsafe turns drive volume, while wrong-side driving is the deadliest behavior. A linear regression forecasts about 365,000 collisions statewide in 2026, and the project ends with five recommendations such as speed cameras and median barriers.",
+    "tech": [
+      "Python",
+      "pandas",
+      "NumPy",
+      "matplotlib",
+      "seaborn",
+      "scikit-learn",
+      "Jupyter"
+    ],
+    "link": "https://github.com/tanxsh/Data-Analytics-Python-Project"
+  }
+]

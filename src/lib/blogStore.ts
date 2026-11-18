@@ -1,6 +1,9 @@
 import path from "node:path";
 import { readJsonArrayFile, writeJsonArrayFile } from "./jsonFileStore";
+import { slugifyTitle as slugify, uniqueSlug } from "./slug";
 import type { BlogFields } from "./validateBlog";
+
+export { slugifyTitle } from "./slug";
 
 export type BlogPost = {
   id: string;
@@ -14,15 +17,6 @@ export type BlogPost = {
 const defaultDataDir = path.join(process.cwd(), "data");
 const EXCERPT_LENGTH = 160;
 
-export function slugifyTitle(title: string): string {
-  const slug = title
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "");
-
-  return slug.length > 0 ? slug : "post";
-}
-
 export async function appendBlog(
   post: BlogFields,
   dataDir: string = defaultDataDir,
@@ -32,7 +26,10 @@ export async function appendBlog(
 
   const stored: BlogPost = {
     id: crypto.randomUUID(),
-    slug: uniqueSlug(slugifyTitle(post.title), blogs),
+    slug: uniqueSlug(
+      slugify(post.title),
+      new Set(blogs.map((blog) => blog.slug)),
+    ),
     title: post.title,
     excerpt: toExcerpt(post.content),
     content: post.content,
@@ -57,20 +54,6 @@ export async function getBlogBySlug(
 ): Promise<BlogPost | undefined> {
   const blogs = await listBlogs(dataDir);
   return blogs.find((blog) => blog.slug === slug);
-}
-
-function uniqueSlug(base: string, existing: BlogPost[]): string {
-  const taken = new Set(existing.map((blog) => blog.slug));
-
-  let candidate = base;
-  let counter = 2;
-
-  while (taken.has(candidate)) {
-    candidate = `${base}-${counter}`;
-    counter += 1;
-  }
-
-  return candidate;
 }
 
 function toExcerpt(content: string): string {
