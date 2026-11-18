@@ -31,14 +31,35 @@ const DOT_RADIUS = 14;
 const SELECTED_RADIUS = 16;
 const SELECTED_STROKE_WIDTH = 3;
 
+const LABEL_GAP = 18;
+const LABEL_RADIUS = CHART_RADIUS + LABEL_GAP;
+const LABEL_DIAGONAL = LABEL_RADIUS / Math.SQRT2;
+const LABEL_LINE_HEIGHT = 30;
+
 const QUADRANT_CORNERS: Record<
   string,
   { x: number; y: number; anchor: "start" | "end" }
 > = {
-  Languages: { x: 24, y: 32, anchor: "start" },
-  "Frameworks & Libraries": { x: VIEW_SIZE - 24, y: 32, anchor: "end" },
-  "Platforms & Tools": { x: VIEW_SIZE - 24, y: VIEW_SIZE - 32, anchor: "end" },
-  Techniques: { x: 24, y: VIEW_SIZE - 32, anchor: "start" },
+  Languages: {
+    x: CENTER - LABEL_DIAGONAL,
+    y: CENTER - LABEL_DIAGONAL,
+    anchor: "end",
+  },
+  "Frameworks & Libraries": {
+    x: CENTER + LABEL_DIAGONAL,
+    y: CENTER - LABEL_DIAGONAL,
+    anchor: "start",
+  },
+  "Platforms & Tools": {
+    x: CENTER + LABEL_DIAGONAL,
+    y: CENTER + LABEL_DIAGONAL + LABEL_LINE_HEIGHT,
+    anchor: "start",
+  },
+  Techniques: {
+    x: CENTER - LABEL_DIAGONAL,
+    y: CENTER + LABEL_DIAGONAL + LABEL_LINE_HEIGHT,
+    anchor: "end",
+  },
 };
 
 const RING_STROKE_OPACITY = [0.16, 0.14, 0.12] as const;
@@ -205,13 +226,13 @@ export default function RadarChart({
   return (
     <div className="relative">
       <style>{animationCss}</style>
-      <svg
-        ref={svgRef}
-        viewBox={`0 0 ${VIEW_SIZE} ${VIEW_SIZE}`}
-        className="mx-auto w-full"
-        role="img"
-        aria-label="Tech radar"
-      >
+        <svg
+          ref={svgRef}
+          viewBox={`0 0 ${VIEW_SIZE} ${VIEW_SIZE}`}
+          className="mx-auto w-full overflow-visible"
+          role="img"
+          aria-label="Tech radar"
+        >
         <defs>
           <radialGradient id="radar-disc" gradientUnits="userSpaceOnUse" cx={CENTER} cy={CENTER} r={CHART_RADIUS}>
             <stop offset="0%" style={{ stopColor: "var(--surface)" }} />
@@ -428,7 +449,6 @@ export default function RadarChart({
               x={corner.x}
               y={corner.y}
               textAnchor={corner.anchor}
-              dominantBaseline="central"
               className={`${CATEGORY_STYLES[quadrant.category]?.labelText ?? "fill-foreground"} text-[24px] font-semibold`}
             >
               {quadrant.category}
