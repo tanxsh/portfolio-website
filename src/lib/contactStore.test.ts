@@ -3,7 +3,7 @@ import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { appendContact } from "./contactStore";
+import { appendContact, deleteContact, getContactById, listContacts, updateContact } from "./contactStore";
 
 const validContact = {
   name: "Tanish",
@@ -93,5 +93,70 @@ describe("appendContact", () => {
       notArray,
     );
     expect(existsSync(path.join(dataDir, "contacts.json.tmp"))).toBe(false);
+  });
+});
+
+describe("contact CRUD", () => {
+  let dataDir: string;
+
+  beforeEach(async () => {
+    dataDir = await mkdtemp(path.join(tmpdir(), "contact-store-"));
+  });
+
+  afterEach(async () => {
+    await rm(dataDir, { recursive: true, force: true });
+  });
+
+  it("lists contacts", async () => {
+    const stored = await appendContact(validContact, dataDir);
+
+    expect(await listContacts(dataDir)).toEqual([stored]);
+  });
+
+  it("finds a contact by id", async () => {
+    const stored = await appendContact(validContact, dataDir);
+
+    expect((await getContactById(stored.id, dataDir))?.name).toBe("Tanish");
+    expect(await getContactById("missing", dataDir)).toBeUndefined();
+  });
+
+  it("updates name, email and message but keeps id and submittedAt", async () => {
+    const stored = await appendContact(validContact, dataDir);
+
+    const updated = await updateContact(
+      stored.id,
+      {
+        name: "Updated Name",
+        email: "updated@example.com",
+        message: "Updated message",
+      },
+      dataDir,
+    );
+
+    expect(updated).toBeDefined();
+    expect(updated?.id).toBe(stored.id);
+    expect(updated?.submittedAt).toBe(stored.submittedAt);
+    expect(updated?.name).toBe("Updated Name");
+    expect(updated?.email).toBe("updated@example.com");
+    expect(updated?.message).toBe("Updated message");
+    expect((await listContacts(dataDir))[0].name).toBe("Updated Name");
+  });
+
+  it("returns undefined when updating a missing id", async () => {
+    expect(
+      await updateContact(
+        "missing",
+        { name: "N", email: "n@example.com", message: "M" },
+        dataDir,
+      ),
+    ).toBeUndefined();
+  });
+
+  it("deletes a contact and reports whether it existed", async () => {
+    const stored = await appendContact(validContact, dataDir);
+
+    expect(await deleteContact(stored.id, dataDir)).toBe(true);
+    expect(await listContacts(dataDir)).toEqual([]);
+    expect(await deleteContact(stored.id, dataDir)).toBe(false);
   });
 });
