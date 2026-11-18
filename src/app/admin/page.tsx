@@ -16,6 +16,11 @@ const adminAreas = [
     title: "Projects",
     description: "Create, edit, and delete portfolio projects.",
   },
+  {
+    href: "/admin/contacts",
+    title: "Contacts",
+    description: "Review, edit, and delete contact submissions.",
+  },
 ];
 
 export default function AdminPage() {
