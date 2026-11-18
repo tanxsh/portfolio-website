@@ -1,0 +1,100 @@
+[
+  {
+    "id": "35dbd279-bdfd-458b-b0cc-8b7ddc0e3e4b",
+    "name": "Python",
+    "category": "Languages",
+    "ring": "Adopt",
+    "note": "My main language for ML, data pipelines and APIs"
+  },
+  {
+    "id": "de727439-b6b1-4eda-868b-99122ee56892",
+    "name": "SQL",
+    "category": "Languages",
+    "ring": "Adopt",
+    "note": "Everyday tool for data work"
+  },
+  {
+    "id": "3b8084f3-5417-4fe7-b663-9028cf59cfe9",
+    "name": "R",
+    "category": "Languages",
+    "ring": "Trial",
+    "note": "Used for statistics and optimization coursework"
+  },
+  {
+    "id": "05f77213-4883-4ab0-b559-24f339b8ea06",
+    "name": "TypeScript",
+    "category": "Languages",
+    "ring": "Trial",
+    "note": "Used for this portfolio and React work"
+  },
+  {
+    "id": "d765713b-02b3-4054-a1e7-d05850e096e9",
+    "name": "FastAPI",
+    "category": "Frameworks",
+    "ring": "Adopt",
+    "note": "Backend for my AI applications"
+  },
+  {
+    "id": "a8991a49-18ea-4f5d-945e-289d822ce515",
+    "name": "Next.js",
+    "category": "Frameworks",
+    "ring": "Trial",
+    "note": "Powers this portfolio"
+  },
+  {
+    "id": "dd39e455-0211-4678-8b95-4d042ef3aed0",
+    "name": "LangGraph",
+    "category": "Frameworks",
+    "ring": "Adopt",
+    "note": "My go-to for multi-agent pipelines"
+  },
+  {
+    "id": "d753db3c-2fb1-418c-a2fd-f2dd34598979",
+    "name": "LangChain",
+    "category": "Frameworks",
+    "ring": "Adopt",
+    "note": "Building blocks for RAG applications"
+  },
+  {
+    "id": "6db2ca3d-b04c-4eac-b206-90a913d362de",
+    "name": "ChromaDB",
+    "category": "Tools",
+    "ring": "Adopt",
+    "note": "Local vector database for retrieval"
+  },
+  {
+    "id": "87b99ce9-06a6-4076-883a-d20b6c3b0d76",
+    "name": "XGBoost",
+    "category": "Tools",
+    "ring": "Adopt",
+    "note": "Strong default for tabular prediction"
+  },
+  {
+    "id": "bcd3bab3-97b4-4281-821e-bb64c21cd239",
+    "name": "Docker",
+    "category": "Tools",
+    "ring": "Trial",
+    "note": "Packaging and running services"
+  },
+  {
+    "id": "c0195995-513f-4891-88d0-46460511351f",
+    "name": "Kubernetes",
+    "category": "Tools",
+    "ring": "Assess",
+    "note": "Learning container orchestration"
+  },
+  {
+    "id": "081f836d-99b5-42f3-8a74-43c6ac23943c",
+    "name": "Hybrid search with reranking",
+    "category": "Practices",
+    "ring": "Adopt",
+    "note": "BM25 plus embeddings plus a cross-encoder improves grounding"
+  },
+  {
+    "id": "c327a76e-cfff-4b13-b636-15de6598f19f",
+    "name": "LLM-as-a-judge",
+    "category": "Practices",
+    "ring": "Trial",
+    "note": "Useful for evaluating RAG answers"
+  }
+]
