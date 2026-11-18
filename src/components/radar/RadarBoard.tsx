@@ -4,6 +4,7 @@ import RadarChart from "@/components/radar/RadarChart";
 import RadarLegend, {
   RING_SECTIONS,
 } from "@/components/radar/RadarLegend";
+import { CATEGORY_STYLES } from "@/components/radar/categoryStyles";
 import type { RadarItem } from "@/lib/radarStore";
 
 type RadarBoardProps = {
@@ -24,25 +25,6 @@ const FILTER_CATEGORIES = [
   "Techniques",
 ];
 
-const CATEGORY_CHIP_STYLES: Record<string, { text: string; active: string }> = {
-  Languages: {
-    text: "text-sky-600 dark:text-sky-400",
-    active: "bg-sky-500 border-sky-500",
-  },
-  "Frameworks & Libraries": {
-    text: "text-violet-600 dark:text-violet-400",
-    active: "bg-violet-500 border-violet-500",
-  },
-  "Platforms & Tools": {
-    text: "text-emerald-600 dark:text-emerald-400",
-    active: "bg-emerald-500 border-emerald-500",
-  },
-  Techniques: {
-    text: "text-amber-600 dark:text-amber-400",
-    active: "bg-amber-500 border-amber-500",
-  },
-};
-
 export default function RadarBoard({
   items,
   selectedId,
@@ -57,7 +39,7 @@ export default function RadarBoard({
       <div className="flex flex-wrap justify-center gap-2">
         {FILTER_CATEGORIES.map((category) => {
           const active = category === selectedCategory;
-          const colors = CATEGORY_CHIP_STYLES[category];
+          const style = CATEGORY_STYLES[category];
 
           return (
             <button
@@ -66,11 +48,11 @@ export default function RadarBoard({
               onClick={() => onSelectCategory(category)}
               className={`rounded-full border px-4 py-1.5 text-sm font-medium transition-colors ${
                 active
-                  ? colors
-                    ? `${colors.active} text-white`
+                  ? style
+                    ? `${style.chipActive} text-white`
                     : "border-accent bg-accent text-accent-contrast"
-                  : colors
-                    ? `${colors.text} border-edge`
+                  : style
+                    ? `${style.chipText} border-edge`
                     : "border-edge text-muted"
               }`}
             >

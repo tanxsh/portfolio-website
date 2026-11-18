@@ -9,9 +9,9 @@ export type RadarPoint = {
 
 export const VIEW_SIZE = 800;
 export const CENTER = VIEW_SIZE / 2;
-export const BORDER_MARGIN = 20;
-export const AXIS_MARGIN = 40;
-export const MIN_DISTANCE = 32;
+export const BORDER_MARGIN = 18;
+export const AXIS_MARGIN = 28;
+export const MIN_DISTANCE = 40;
 
 export const RING_BANDS = [
   { name: "Adopt", inner: 0, outer: 130 },
@@ -39,33 +39,93 @@ export const RADAR_QUADRANTS: RadarQuadrant[] = [
 
 type CellCandidate = { x: number; y: number };
 
+const MIN_ROW_RADIUS = 40;
+const MAX_SPACING = 80;
+const MAX_ROWS = 6;
+
 function distance(a: CellCandidate, b: CellCandidate): number {
   return Math.hypot(a.x - b.x, a.y - b.y);
 }
 
+function angularSpan(r: number): number {
+  return Math.PI / 2 - 2 * Math.asin(Math.min(1, AXIS_MARGIN / r));
+}
+
+function rowCapacity(r: number): number {
+  const span = angularSpan(r);
+  if (span <= 0) {
+    return 0;
+  }
+  return Math.floor((span * r) / MIN_DISTANCE) + 1;
+}
+
+function evenlySpread(lo: number, hi: number, count: number): number[] {
+  if (count === 1) {
+    return [(lo + hi) / 2];
+  }
+  return Array.from(
+    { length: count },
+    (_, index) => lo + (index * (hi - lo)) / (count - 1),
+  );
+}
+
 function candidatesForCell(
+  itemCount: number,
   ringIndex: number,
   quadrant: RadarQuadrant,
 ): CellCandidate[] {
   const band = RING_BANDS[ringIndex];
+  if (itemCount <= 0) {
+    return [];
+  }
+
+  const radiusLow = Math.max(
+    band.inner + BORDER_MARGIN,
+    MIN_ROW_RADIUS,
+  );
+  const radiusHigh = band.outer - BORDER_MARGIN;
+  if (radiusHigh < radiusLow) {
+    return [];
+  }
+
+  let radii: number[] = [];
+  let capacities: number[] = [];
+  let rows = 1;
+
+  for (; rows <= MAX_ROWS; rows++) {
+    radii = evenlySpread(radiusLow, radiusHigh, rows);
+    capacities = radii.map(rowCapacity);
+    const total = capacities.reduce((sum, capacity) => sum + capacity, 0);
+    if (total >= itemCount) {
+      break;
+    }
+  }
+
+  const targetPerRow = Math.ceil(itemCount / rows);
+  const rowOrder = radii
+    .map((_, index) => index)
+    .sort((a, b) => radii[b] - radii[a]);
+
   const candidates: CellCandidate[] = [];
+  let remaining = itemCount;
 
-  const radiusMin = band.inner + BORDER_MARGIN;
-  const radiusMax = band.outer - BORDER_MARGIN;
-  const radiusMid = (band.inner + band.outer) / 2;
-
-  function addRow(r: number) {
-    const angleMin = Math.asin(Math.min(1, AXIS_MARGIN / r));
-    const angleMax = Math.PI / 2 - angleMin;
-    const span = angleMax - angleMin;
-    if (span <= 0) {
-      return;
+  for (const rowIndex of rowOrder) {
+    if (remaining <= 0) {
+      break;
     }
 
-    const count = Math.floor((span * r) / MIN_DISTANCE) + 1;
+    const r = radii[rowIndex];
+    const capacity = capacities[rowIndex];
+    const count = Math.min(capacity, remaining, targetPerRow);
+    if (count <= 0) {
+      continue;
+    }
+
+    const span = angularSpan(r);
+    const arc = span * r;
+    const slot = count > 1 ? Math.min(MAX_SPACING, arc / (count - 1)) / r : 0;
 
     for (let i = 0; i < count; i++) {
-      const slot = count > 1 ? span / (count - 1) : 0;
       const phi = Math.PI / 4 + (i - (count - 1) / 2) * slot;
       const angle = quadrant.startAngle + phi;
       candidates.push({
@@ -73,37 +133,43 @@ function candidatesForCell(
         y: CENTER + r * Math.sin(angle),
       });
     }
-  }
 
-  for (let step = 0; ; step++) {
-    const outward = radiusMid + step * MIN_DISTANCE;
-    const inward = radiusMid - step * MIN_DISTANCE;
-    const outwardValid = outward <= radiusMax;
-    const inwardValid = inward >= radiusMin;
-
-    if (!outwardValid && !inwardValid) {
-      break;
-    }
-
-    if (outwardValid) {
-      addRow(outward);
-    }
-    if (inwardValid && step > 0) {
-      addRow(inward);
-    }
+    remaining -= count;
   }
 
   return candidates;
 }
 
 export function layoutRadar(items: RadarItem[]): RadarPoint[] {
-  const ringIndexByRing = new Map(
+  const ringIndexByRing = new Map<string, number>(
     RING_BANDS.map((band, index) => [band.name, index] as const),
   );
   const quadrantByCategory = new Map(
     RADAR_QUADRANTS.map((quadrant) => [quadrant.category, quadrant] as const),
   );
+
+  const cellCounts = new Map<string, number>();
+  for (const item of items) {
+    if (!ringIndexByRing.has(item.ring) || !quadrantByCategory.has(item.category)) {
+      continue;
+    }
+    const key = `${item.ring}:${item.category}`;
+    cellCounts.set(key, (cellCounts.get(key) ?? 0) + 1);
+  }
+
   const candidatesByCell = new Map<string, CellCandidate[]>();
+  for (const [key, count] of cellCounts) {
+    const [ringName, categoryName] = key.split(":");
+    const ringIndex = ringIndexByRing.get(ringName) ?? 0;
+    const quadrant = quadrantByCategory.get(categoryName);
+    if (!quadrant) {
+      continue;
+    }
+    candidatesByCell.set(
+      key,
+      candidatesForCell(count, ringIndex, quadrant),
+    );
+  }
 
   const placed: CellCandidate[] = [];
   const points: RadarPoint[] = [];
@@ -121,12 +187,7 @@ export function layoutRadar(items: RadarItem[]): RadarPoint[] {
       }
 
       const cellKey = `${band.name}:${quadrant.category}`;
-      let candidates = candidatesByCell.get(cellKey);
-      if (!candidates) {
-        const ringIndex = ringIndexByRing.get(band.name) ?? 0;
-        candidates = candidatesForCell(ringIndex, quadrant);
-        candidatesByCell.set(cellKey, candidates);
-      }
+      const candidates = candidatesByCell.get(cellKey) ?? [];
 
       let chosenIndex = -1;
       for (let index = 0; index < candidates.length; index++) {
@@ -155,6 +216,10 @@ export function layoutRadar(items: RadarItem[]): RadarPoint[] {
       }
 
       const spot = candidates[chosenIndex];
+      if (!spot) {
+        continue;
+      }
+
       placed.push(spot);
       points.push({
         id: item.id,

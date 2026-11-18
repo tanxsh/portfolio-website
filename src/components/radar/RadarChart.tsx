@@ -7,6 +7,7 @@ import {
   type CSSProperties,
 } from "react";
 import RadarTooltip from "@/components/radar/RadarTooltip";
+import { CATEGORY_STYLES } from "@/components/radar/categoryStyles";
 import {
   CENTER,
   RADAR_QUADRANTS,
@@ -29,36 +30,6 @@ const CHART_RADIUS = RING_BANDS[RING_BANDS.length - 1].outer;
 const DOT_RADIUS = 14;
 const SELECTED_RADIUS = 16;
 const SELECTED_STROKE_WIDTH = 3;
-
-const CATEGORY_COLORS: Record<
-  string,
-  { fill: string; light: string; base: string; glow: string }
-> = {
-  Languages: {
-    fill: "fill-sky-600 dark:fill-sky-400",
-    light: "#7dd3fc",
-    base: "#0284c7",
-    glow: "#0ea5e9",
-  },
-  "Frameworks & Libraries": {
-    fill: "fill-violet-600 dark:fill-violet-400",
-    light: "#c4b5fd",
-    base: "#7c3aed",
-    glow: "#8b5cf6",
-  },
-  "Platforms & Tools": {
-    fill: "fill-emerald-600 dark:fill-emerald-400",
-    light: "#6ee7b7",
-    base: "#059669",
-    glow: "#10b981",
-  },
-  Techniques: {
-    fill: "fill-amber-600 dark:fill-amber-400",
-    light: "#fcd34d",
-    base: "#d97706",
-    glow: "#f59e0b",
-  },
-};
 
 const QUADRANT_CORNERS: Record<
   string,
@@ -249,7 +220,7 @@ export default function RadarChart({
           </radialGradient>
 
           {RADAR_QUADRANTS.map((quadrant) => {
-            const color = CATEGORY_COLORS[quadrant.category]?.glow ?? "#71717a";
+            const color = CATEGORY_STYLES[quadrant.category]?.glow ?? "#71717a";
             return (
               <radialGradient
                 key={quadrant.category}
@@ -266,7 +237,7 @@ export default function RadarChart({
           })}
 
           {RADAR_QUADRANTS.map((quadrant) => {
-            const colors = CATEGORY_COLORS[quadrant.category];
+            const colors = CATEGORY_STYLES[quadrant.category];
             return (
               <radialGradient
                 key={quadrant.category}
@@ -459,7 +430,7 @@ export default function RadarChart({
               y={corner.y}
               textAnchor={corner.anchor}
               dominantBaseline="central"
-              className={`${CATEGORY_COLORS[quadrant.category]?.fill ?? "fill-foreground"} text-[24px] font-semibold`}
+              className={`${CATEGORY_STYLES[quadrant.category]?.labelText ?? "fill-foreground"} text-[24px] font-semibold`}
             >
               {quadrant.category}
             </text>
@@ -476,7 +447,7 @@ export default function RadarChart({
             (quadrant) => quadrant.category === item.category,
           );
           const glowColor =
-            CATEGORY_COLORS[item.category]?.glow ?? "#71717a";
+            CATEGORY_STYLES[item.category]?.glow ?? "#71717a";
           const selected = point.id === selectedId;
           const dimmed =
             (hoveredId !== null && hoveredId !== point.id) ||

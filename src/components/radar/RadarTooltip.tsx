@@ -1,4 +1,5 @@
 import { RING_SECTIONS } from "@/components/radar/RadarLegend";
+import { CATEGORY_STYLES } from "@/components/radar/categoryStyles";
 import { CENTER, VIEW_SIZE } from "@/lib/radarLayout";
 import type { RadarItem } from "@/lib/radarStore";
 
@@ -6,27 +7,6 @@ type RadarTooltipProps = {
   item: RadarItem;
   x: number;
   y: number;
-};
-
-const CATEGORY_BADGES: Record<string, string> = {
-  Languages: "bg-sky-500/15 text-sky-600 dark:text-sky-400",
-  "Frameworks & Libraries": "bg-violet-500/15 text-violet-600 dark:text-violet-400",
-  "Platforms & Tools": "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400",
-  Techniques: "bg-amber-500/15 text-amber-600 dark:text-amber-400",
-};
-
-const CATEGORY_BARS: Record<string, string> = {
-  Languages: "bg-sky-500",
-  "Frameworks & Libraries": "bg-violet-500",
-  "Platforms & Tools": "bg-emerald-500",
-  Techniques: "bg-amber-500",
-};
-
-const CATEGORY_HEX: Record<string, string> = {
-  Languages: "#0ea5e9",
-  "Frameworks & Libraries": "#8b5cf6",
-  "Platforms & Tools": "#10b981",
-  Techniques: "#f59e0b",
 };
 
 const tooltipCss = `
@@ -66,9 +46,10 @@ export default function RadarTooltip({ item, x, y }: RadarTooltipProps) {
   const ring = RING_SECTIONS.find((entry) => entry.name === item.ring);
   const alignRight = x > CENTER;
   const alignBottom = y > CENTER;
-  const badge = CATEGORY_BADGES[item.category] ?? "bg-zinc-500/15 text-zinc-600 dark:text-zinc-400";
-  const bar = CATEGORY_BARS[item.category] ?? "bg-zinc-500";
-  const lineColor = CATEGORY_HEX[item.category] ?? "#71717a";
+  const style = CATEGORY_STYLES[item.category];
+  const badge = style?.badge ?? "bg-zinc-500/15 text-zinc-600 dark:text-zinc-400";
+  const bar = style?.bar ?? "bg-zinc-500";
+  const lineColor = style?.glow ?? "#71717a";
 
   return (
     <div

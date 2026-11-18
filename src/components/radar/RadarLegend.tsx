@@ -1,6 +1,7 @@
 "use client";
 
 import { layoutRadar } from "@/lib/radarLayout";
+import { CATEGORY_STYLES } from "@/components/radar/categoryStyles";
 import type { RadarItem } from "@/lib/radarStore";
 
 type RadarLegendProps = {
@@ -49,6 +50,7 @@ export default function RadarLegend({
             <ul className="mt-2 flex flex-col">
               {ringItems.map((item) => {
                 const number = numberById.get(item.id);
+                const style = CATEGORY_STYLES[item.category];
                 const dimmed =
                   selectedCategory !== "All" &&
                   item.category !== selectedCategory;
@@ -62,19 +64,31 @@ export default function RadarLegend({
                       onMouseLeave={() => onHover(null)}
                       onFocus={() => onHover(item.id)}
                       onBlur={() => onHover(null)}
-                      className={`flex w-full items-center gap-2.5 rounded-lg px-3 py-1.5 text-left transition-colors ${
+                      className={`flex w-full items-center gap-2.5 rounded-lg border-l-2 px-3 py-1.5 text-left transition-colors ${
+                        style?.border ?? "border-edge"
+                      } ${
                         selectedId === item.id || hoveredId === item.id
                           ? "bg-accent-soft"
                           : "hover:bg-accent-soft/50"
                       } ${dimmed ? "opacity-40" : ""}`}
                     >
+                      <span
+                        className={`h-2.5 w-2.5 shrink-0 rounded-full ${
+                          style?.bar ?? "bg-zinc-500"
+                        }`}
+                        aria-hidden="true"
+                      />
                       <span className="w-5 shrink-0 text-right text-xs font-semibold text-muted">
                         {number ?? ""}
                       </span>
                       <span className="min-w-0 truncate text-sm text-foreground">
                         {item.name}
                       </span>
-                      <span className="ml-auto shrink-0 text-xs text-muted">
+                      <span
+                        className={`ml-auto shrink-0 text-xs ${
+                          style?.chipText ?? "text-muted"
+                        }`}
+                      >
                         {item.category}
                       </span>
                     </button>

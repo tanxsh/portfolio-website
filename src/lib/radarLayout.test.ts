@@ -49,7 +49,6 @@ const fixture: RadarItem[] = [
   item("LLM-as-a-judge", "Techniques", "Trial"),
   item("Monolith-first", "Techniques", "Hold"),
   item("dbt", "Platforms & Tools", "Assess"),
-  item("Express", "Frameworks & Libraries", "Trial"),
   item("Angular", "Frameworks & Libraries", "Hold"),
   item("Feature store", "Techniques", "Assess"),
 ];
@@ -69,7 +68,6 @@ const expectedNumbering = [
   "Docker",
   "Astro",
   "LLM-as-a-judge",
-  "Express",
   "Kubernetes",
   "Streamlit",
   "Julia",
@@ -84,6 +82,20 @@ const expectedNumbering = [
   "Monolith-first",
   "Angular",
 ];
+
+const itemByName = new Map(fixture.map((entry) => [entry.name, entry]));
+const pointByItemId = new Map(
+  layoutRadar(fixture).map((point) => [point.id, point] as const),
+);
+
+function distanceBetween(nameA: string, nameB: string): number {
+  const a = pointByItemId.get(itemByName.get(nameA)!.id);
+  const b = pointByItemId.get(itemByName.get(nameB)!.id);
+  if (!a || !b) {
+    throw new Error(`Missing layout point for ${nameA} or ${nameB}.`);
+  }
+  return Math.hypot(a.x - b.x, a.y - b.y);
+}
 
 describe("layoutRadar", () => {
   it("returns one numbered entry per item", () => {
@@ -139,7 +151,7 @@ describe("layoutRadar", () => {
     }
   });
 
-  it("keeps every dot at least 40px from both axis lines", () => {
+  it("keeps every dot at least 28px from both axis lines", () => {
     const points = layoutRadar(fixture);
 
     for (const point of points) {
@@ -152,7 +164,7 @@ describe("layoutRadar", () => {
     }
   });
 
-  it("places every dot inside its ring band, at least 20px from the band borders", () => {
+  it("places every dot inside its ring band, at least 18px from the band borders", () => {
     const points = layoutRadar(fixture);
     const itemById = new Map(fixture.map((item) => [item.id, item]));
 
@@ -173,7 +185,7 @@ describe("layoutRadar", () => {
     }
   });
 
-  it("keeps every pair of dot centers at least 32px apart", () => {
+  it("keeps every pair of dot centers at least 40px apart", () => {
     const points = layoutRadar(fixture);
 
     for (let i = 0; i < points.length; i++) {
@@ -185,6 +197,13 @@ describe("layoutRadar", () => {
         expect(distance).toBeGreaterThanOrEqual(MIN_DISTANCE - 1e-6);
       }
     }
+  });
+
+  it("spreads a cell with 2 items wider than a cell with 5 items", () => {
+    const twoItemGap = distanceBetween("R", "TypeScript");
+    const fiveItemGap = distanceBetween("LangGraph", "LangChain");
+
+    expect(twoItemGap).toBeGreaterThan(fiveItemGap);
   });
 
   it("is deterministic for the same input", () => {
