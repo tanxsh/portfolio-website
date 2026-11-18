@@ -21,6 +21,11 @@ const adminAreas = [
     title: "Contacts",
     description: "Review, edit, and delete contact submissions.",
   },
+  {
+    href: "/admin/radar",
+    title: "Tech Radar",
+    description: "Manage your tech radar items.",
+  },
 ];
 
 export default function AdminPage() {
