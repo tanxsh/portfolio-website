@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState, type ChangeEvent, type FormEvent } from "react";
+import type { BlogPost } from "@/lib/blogStore";
 
 type FieldErrors = {
   title?: string;
@@ -27,6 +28,12 @@ type FieldProps = {
   error: string | undefined;
   disabled: boolean;
   onChange: (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+};
+
+type BlogFormProps = {
+  post?: BlogPost | null;
+  onSaved?: (post: BlogPost) => void;
+  onReset?: () => void;
 };
 
 const initialValues: FormValues = { title: "", content: "" };
@@ -84,10 +91,14 @@ function Field({
   );
 }
 
-export default function BlogForm() {
-  const [values, setValues] = useState<FormValues>(initialValues);
+export default function BlogForm({ post, onSaved, onReset }: BlogFormProps) {
+  const [values, setValues] = useState<FormValues>({
+    title: post?.title ?? "",
+    content: post?.content ?? "",
+  });
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
   const [createdSlug, setCreatedSlug] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [failureMessage, setFailureMessage] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
@@ -103,22 +114,38 @@ export default function BlogForm() {
     event.preventDefault();
     setSubmitting(true);
     setCreatedSlug(null);
+    setSuccessMessage(null);
     setFailureMessage(null);
     setFieldErrors({});
 
     try {
-      const response = await fetch("/api/blogs", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(values),
-      });
+      const response = await fetch(
+        post ? `/api/blogs/${post.id}` : "/api/blogs",
+        {
+          method: post ? "PUT" : "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(values),
+        },
+      );
       const parsed = (await response
         .json()
         .catch(() => null)) as BlogApiBody | null;
 
       if (response.ok) {
-        setCreatedSlug(typeof parsed?.slug === "string" ? parsed.slug : null);
-        setValues(initialValues);
+        const saved = parsed as unknown as BlogPost | null;
+
+        if (post) {
+          setSuccessMessage("Post updated.");
+        } else {
+          setCreatedSlug(
+            typeof parsed?.slug === "string" ? parsed.slug : null,
+          );
+          setValues(initialValues);
+        }
+
+        if (saved) {
+          onSaved?.(saved);
+        }
       } else if (response.status === 400 && parsed?.errors) {
         setFieldErrors(parsed.errors);
       } else {
@@ -141,7 +168,7 @@ export default function BlogForm() {
     <form
       noValidate
       onSubmit={handleSubmit}
-      className="mt-8 flex max-w-xl flex-col gap-5"
+      className="flex flex-col gap-5"
     >
       {createdSlug && (
         <p
@@ -155,6 +182,12 @@ export default function BlogForm() {
           >
             View it at /blogs/{createdSlug}
           </Link>
+        </p>
+      )}
+
+      {successMessage && (
+        <p role="status" className="banner-success">
+          {successMessage}
         </p>
       )}
 
@@ -191,8 +224,19 @@ export default function BlogForm() {
         disabled={submitting}
         className="btn-primary self-start"
       >
-        {submitting ? "Publishing…" : "Publish Post"}
+        {submitting ? "Saving…" : post ? "Save Changes" : "Publish Post"}
       </button>
+
+      {post && onReset && (
+        <button
+          type="button"
+          onClick={onReset}
+          disabled={submitting}
+          className="btn-secondary self-start"
+        >
+          New Post
+        </button>
+      )}
     </form>
   );
 }
