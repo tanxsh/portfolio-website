@@ -56,6 +56,56 @@ export async function getBlogBySlug(
   return blogs.find((blog) => blog.slug === slug);
 }
 
+export async function getBlogById(
+  id: string,
+  dataDir: string = defaultDataDir,
+): Promise<BlogPost | undefined> {
+  const blogs = await listBlogs(dataDir);
+  return blogs.find((blog) => blog.id === id);
+}
+
+export async function updateBlog(
+  id: string,
+  fields: BlogFields,
+  dataDir: string = defaultDataDir,
+): Promise<BlogPost | undefined> {
+  const blogsFile = path.join(dataDir, "blogs.json");
+  const blogs = await readJsonArrayFile<BlogPost>(blogsFile);
+
+  const index = blogs.findIndex((blog) => blog.id === id);
+  if (index === -1) {
+    return undefined;
+  }
+
+  const updated: BlogPost = {
+    ...blogs[index],
+    title: fields.title,
+    excerpt: toExcerpt(fields.content),
+    content: fields.content,
+  };
+
+  blogs[index] = updated;
+  await writeJsonArrayFile(blogsFile, blogs);
+
+  return updated;
+}
+
+export async function deleteBlog(
+  id: string,
+  dataDir: string = defaultDataDir,
+): Promise<boolean> {
+  const blogsFile = path.join(dataDir, "blogs.json");
+  const blogs = await readJsonArrayFile<BlogPost>(blogsFile);
+
+  const remaining = blogs.filter((blog) => blog.id !== id);
+  if (remaining.length === blogs.length) {
+    return false;
+  }
+
+  await writeJsonArrayFile(blogsFile, remaining);
+  return true;
+}
+
 function toExcerpt(content: string): string {
   if (content.length <= EXCERPT_LENGTH) {
     return content;

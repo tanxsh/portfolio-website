@@ -5,9 +5,12 @@ import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import {
   appendBlog,
+  deleteBlog,
+  getBlogById,
   getBlogBySlug,
   listBlogs,
   slugifyTitle,
+  updateBlog,
 } from "./blogStore";
 
 describe("slugifyTitle", () => {
@@ -94,6 +97,55 @@ describe("blogStore", () => {
     const found = await getBlogBySlug("find-me", dataDir);
     expect(found?.title).toBe("Find Me");
     expect(await getBlogBySlug("missing", dataDir)).toBeUndefined();
+  });
+
+  it("finds a post by id", async () => {
+    const stored = await appendBlog(
+      { title: "By Id", content: "body" },
+      dataDir,
+    );
+
+    expect((await getBlogById(stored.id, dataDir))?.slug).toBe("by-id");
+    expect(await getBlogById("missing", dataDir)).toBeUndefined();
+  });
+
+  it("updates title and content, regenerating the excerpt but keeping id, slug and createdAt", async () => {
+    const stored = await appendBlog(
+      { title: "Original Title", content: "Original content" },
+      dataDir,
+    );
+
+    const updated = await updateBlog(
+      stored.id,
+      { title: "Updated Title", content: "Brand new content" },
+      dataDir,
+    );
+
+    expect(updated).toBeDefined();
+    expect(updated?.id).toBe(stored.id);
+    expect(updated?.slug).toBe("original-title");
+    expect(updated?.createdAt).toBe(stored.createdAt);
+    expect(updated?.title).toBe("Updated Title");
+    expect(updated?.content).toBe("Brand new content");
+    expect(updated?.excerpt).toBe("Brand new content");
+    expect((await listBlogs(dataDir))[0].title).toBe("Updated Title");
+  });
+
+  it("returns undefined when updating a missing id", async () => {
+    expect(
+      await updateBlog("missing", { title: "T", content: "C" }, dataDir),
+    ).toBeUndefined();
+  });
+
+  it("deletes a blog and reports whether it existed", async () => {
+    const stored = await appendBlog(
+      { title: "Delete Me", content: "body" },
+      dataDir,
+    );
+
+    expect(await deleteBlog(stored.id, dataDir)).toBe(true);
+    expect(await listBlogs(dataDir)).toEqual([]);
+    expect(await deleteBlog(stored.id, dataDir)).toBe(false);
   });
 
   it("throws on a corrupt JSON file and leaves it unchanged", async () => {
