@@ -86,7 +86,8 @@ export default function RadarTooltip({ item, x, y }: RadarTooltipProps) {
         }}
       >
         <div
-          className="radar-tooltip-card pointer-events-none relative w-56 overflow-hidden rounded-xl border border-edge bg-surface/70 shadow-lg backdrop-blur-md"
+          data-radar-info=""
+          className="radar-tooltip-card relative w-56 overflow-hidden rounded-xl border border-edge bg-surface/70 shadow-lg backdrop-blur-md"
           style={{
             transformOrigin: `${alignRight ? "right" : "left"} ${
               alignBottom ? "bottom" : "top"

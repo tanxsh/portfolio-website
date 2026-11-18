@@ -47,49 +47,54 @@ export default function RadarLegend({
             </div>
             <p className="mt-0.5 text-xs text-muted">{ring.description}</p>
 
-            <ul className="mt-2 flex flex-col">
+            <ul className="mt-2 flex flex-col gap-1.5">
               {ringItems.map((item) => {
                 const number = numberById.get(item.id);
                 const style = CATEGORY_STYLES[item.category];
-                const dimmed =
+                const activeId = hoveredId ?? selectedId;
+                const dimmedByActivity =
+                  activeId !== null && item.id !== activeId;
+                const dimmedByCategory =
                   selectedCategory !== "All" &&
                   item.category !== selectedCategory;
+                const selected = selectedId === item.id;
 
                 return (
                   <li key={item.id}>
                     <button
                       type="button"
+                      data-radar-item=""
                       onClick={() => onSelect(item.id)}
                       onMouseEnter={() => onHover(item.id)}
                       onMouseLeave={() => onHover(null)}
                       onFocus={() => onHover(item.id)}
                       onBlur={() => onHover(null)}
-                      className={`flex w-full items-center gap-2.5 rounded-lg border-l-2 px-3 py-1.5 text-left transition-colors ${
-                        style?.border ?? "border-edge"
+                      aria-pressed={selected}
+                      className={`flex w-full items-start gap-2.5 rounded-lg border px-3 py-2 text-left transition duration-200 ${
+                        selected
+                          ? `border-2 ${style?.tintActive ?? "bg-zinc-500/28"} ${
+                              style?.borderStrong ?? "border-zinc-500"
+                            }`
+                          : hoveredId === item.id
+                            ? `${style?.tintHovered ?? "bg-zinc-500/18"} ${
+                                style?.borderSoft ?? "border-zinc-500/40"
+                              }`
+                            : `${style?.tint ?? "bg-zinc-500/12"} ${
+                                style?.borderSoft ?? "border-zinc-500/40"
+                              } ${style?.tintHover ?? "hover:bg-zinc-500/18"}`
                       } ${
-                        selectedId === item.id || hoveredId === item.id
-                          ? "bg-accent-soft"
-                          : "hover:bg-accent-soft/50"
-                      } ${dimmed ? "opacity-40" : ""}`}
+                        dimmedByActivity
+                          ? "opacity-35"
+                          : dimmedByCategory
+                            ? "opacity-40"
+                            : ""
+                      }`}
                     >
-                      <span
-                        className={`h-2.5 w-2.5 shrink-0 rounded-full ${
-                          style?.bar ?? "bg-zinc-500"
-                        }`}
-                        aria-hidden="true"
-                      />
-                      <span className="w-5 shrink-0 text-right text-xs font-semibold text-muted">
+                      <span className="w-5 shrink-0 text-right text-xs font-semibold leading-5 text-muted">
                         {number ?? ""}
                       </span>
-                      <span className="min-w-0 truncate text-sm text-foreground">
+                      <span className="min-w-0 whitespace-normal text-sm leading-5 text-foreground">
                         {item.name}
-                      </span>
-                      <span
-                        className={`ml-auto shrink-0 text-xs ${
-                          style?.chipText ?? "text-muted"
-                        }`}
-                      >
-                        {item.category}
                       </span>
                     </button>
                   </li>

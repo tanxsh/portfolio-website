@@ -66,7 +66,7 @@ const animationCss = `
   transform-origin: center;
   transition:
     transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
-    opacity 0.3s ease;
+    opacity 0.2s ease;
 }
 .radar-dot:hover,
 .radar-dot:focus {
@@ -156,12 +156,11 @@ export default function RadarChart({
 }: RadarChartProps) {
   const points = layoutRadar(items);
   const itemById = new Map(items.map((item) => [item.id, item] as const));
-  const hoveredPoint = hoveredId
-    ? points.find((point) => point.id === hoveredId)
+  const activeId = hoveredId ?? selectedId;
+  const activePoint = activeId
+    ? points.find((point) => point.id === activeId)
     : undefined;
-  const hoveredItem = hoveredPoint
-    ? itemById.get(hoveredPoint.id)
-    : undefined;
+  const activeItem = activePoint ? itemById.get(activePoint.id) : undefined;
 
   const svgRef = useRef<SVGSVGElement | null>(null);
   const [reducedMotion, setReducedMotion] = useState(false);
@@ -449,22 +448,27 @@ export default function RadarChart({
           const glowColor =
             CATEGORY_STYLES[item.category]?.glow ?? "#71717a";
           const selected = point.id === selectedId;
-          const dimmed =
-            (hoveredId !== null && hoveredId !== point.id) ||
-            (selectedCategory !== "All" &&
-              item.category !== selectedCategory);
+          const dimmedByActivity = activeId !== null && point.id !== activeId;
+          const dimmedByCategory =
+            selectedCategory !== "All" &&
+            item.category !== selectedCategory;
 
           return (
             <g
               key={point.id}
               tabIndex={0}
+              data-radar-item=""
               onMouseEnter={() => onHover(point.id)}
               onMouseLeave={() => onHover(null)}
               onFocus={() => onHover(point.id)}
               onBlur={() => onHover(null)}
               onClick={() => onSelect(point.id)}
               className={`radar-dot radar-dot-in cursor-pointer ${
-                dimmed ? "opacity-35" : ""
+                dimmedByActivity
+                  ? "opacity-20"
+                  : dimmedByCategory
+                    ? "opacity-40"
+                    : ""
               }`}
               style={
                 {
@@ -520,11 +524,11 @@ export default function RadarChart({
         })}
       </svg>
 
-      {hoveredPoint && hoveredItem && (
+      {activePoint && activeItem && (
         <RadarTooltip
-          item={hoveredItem}
-          x={hoveredPoint.x}
-          y={hoveredPoint.y}
+          item={activeItem}
+          x={activePoint.x}
+          y={activePoint.y}
         />
       )}
     </div>

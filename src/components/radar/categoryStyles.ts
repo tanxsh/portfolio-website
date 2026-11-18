@@ -8,6 +8,12 @@ export type CategoryStyle = {
   badge: string;
   bar: string;
   border: string;
+  tint: string;
+  tintHover: string;
+  tintHovered: string;
+  tintActive: string;
+  borderSoft: string;
+  borderStrong: string;
 };
 
 export const CATEGORY_STYLES: Record<string, CategoryStyle> = {
@@ -21,6 +27,12 @@ export const CATEGORY_STYLES: Record<string, CategoryStyle> = {
     badge: "bg-sky-500/15 text-sky-600 dark:text-sky-400",
     bar: "bg-sky-500",
     border: "border-sky-500",
+    tint: "bg-sky-500/12",
+    tintHover: "hover:bg-sky-500/18",
+    tintHovered: "bg-sky-500/18",
+    tintActive: "bg-sky-500/28",
+    borderSoft: "border-sky-500/40",
+    borderStrong: "border-sky-500",
   },
   "Frameworks & Libraries": {
     light: "#fca5a5",
@@ -32,6 +44,12 @@ export const CATEGORY_STYLES: Record<string, CategoryStyle> = {
     badge: "bg-red-500/15 text-red-600 dark:text-red-400",
     bar: "bg-red-500",
     border: "border-red-500",
+    tint: "bg-red-500/12",
+    tintHover: "hover:bg-red-500/18",
+    tintHovered: "bg-red-500/18",
+    tintActive: "bg-red-500/28",
+    borderSoft: "border-red-500/40",
+    borderStrong: "border-red-500",
   },
   "Platforms & Tools": {
     light: "#6ee7b7",
@@ -43,6 +61,12 @@ export const CATEGORY_STYLES: Record<string, CategoryStyle> = {
     badge: "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400",
     bar: "bg-emerald-500",
     border: "border-emerald-500",
+    tint: "bg-emerald-500/12",
+    tintHover: "hover:bg-emerald-500/18",
+    tintHovered: "bg-emerald-500/18",
+    tintActive: "bg-emerald-500/28",
+    borderSoft: "border-emerald-500/40",
+    borderStrong: "border-emerald-500",
   },
   Techniques: {
     light: "#fcd34d",
@@ -54,5 +78,11 @@ export const CATEGORY_STYLES: Record<string, CategoryStyle> = {
     badge: "bg-amber-500/15 text-amber-600 dark:text-amber-400",
     bar: "bg-amber-500",
     border: "border-amber-500",
+    tint: "bg-amber-500/12",
+    tintHover: "hover:bg-amber-500/18",
+    tintHovered: "bg-amber-500/18",
+    tintActive: "bg-amber-500/28",
+    borderSoft: "border-amber-500/40",
+    borderStrong: "border-amber-500",
   },
 };

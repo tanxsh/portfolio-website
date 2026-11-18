@@ -39,8 +39,26 @@ export default function RadarView() {
     };
   }, []);
 
+  useEffect(() => {
+    function onKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        setSelectedId(null);
+      }
+    }
+
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, []);
+
   return (
-    <div>
+    <div
+      onClick={(event) => {
+        const target = event.target as HTMLElement;
+        if (!target.closest("[data-radar-item], [data-radar-info]")) {
+          setSelectedId(null);
+        }
+      }}
+    >
       {error && <p className="banner-error mt-8">{error}</p>}
 
       {items === null && !error && (
@@ -51,7 +69,9 @@ export default function RadarView() {
         <RadarBoard
           items={items}
           selectedId={selectedId}
-          onSelect={setSelectedId}
+          onSelect={(id) =>
+            setSelectedId((previous) => (previous === id ? null : id))
+          }
           hoveredId={hoveredId}
           onHover={setHoveredId}
           selectedCategory={selectedCategory}
