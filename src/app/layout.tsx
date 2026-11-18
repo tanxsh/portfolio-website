@@ -48,14 +48,24 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <footer className="border-t border-edge">
           <div className="mx-auto flex w-full max-w-4xl flex-col gap-2 px-6 py-6 text-sm text-muted sm:flex-row sm:items-center sm:justify-between">
             <p className="font-medium text-foreground">Tanish Jagadheshan</p>
-            <a
-              href="https://github.com/tanxsh/portfolio-website"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="font-medium text-accent hover:underline"
-            >
-              GitHub
-            </a>
+            <div className="flex gap-5 text-sm">
+              <a
+                href="https://www.linkedin.com/in/tanish-j"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-medium text-accent hover:underline"
+              >
+                LinkedIn
+              </a>
+              <a
+                href="https://github.com/tanxsh/portfolio-website"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-medium text-accent hover:underline"
+              >
+                GitHub
+              </a>
+            </div>
           </div>
         </footer>
       </body>
