@@ -36,8 +36,10 @@ export async function handleContactsGet(): Promise<Response> {
   }
 }
 
-export async function handleContactPost(request: Request): Promise<Response> {
-  const path = "/api/contact";
+export async function handleContactPost(
+  request: Request,
+  path: string,
+): Promise<Response> {
   const body: unknown = await request.json().catch(() => null);
 
   if (typeof body !== "object" || body === null) {
