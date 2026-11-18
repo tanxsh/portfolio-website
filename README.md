@@ -84,9 +84,10 @@ Notes:
 - Pages live in `src/app` and use file-system routing; the shared `Navbar`
   (`src/components/Navbar.tsx`) is rendered by the root layout
   `src/app/layout.tsx`.
-- Project content is data-driven from `src/data/projects.ts`;
-  `/projects/[slug]` uses `generateStaticParams` for the known slugs and
-  `notFound()` for anything else.
+- Project content is served from `data/projects.json` through
+  `src/lib/projectStore.ts` and the `/api/projects` endpoints; the projects
+  pages read it at request time (`connection()` + `<Suspense>`), so new
+  projects appear without a rebuild.
 - Validation rules live only in `src/lib/validateContact.ts` (the server is
   the source of truth); `ContactForm` renders whatever errors the API returns
   and performs no client-side validation.

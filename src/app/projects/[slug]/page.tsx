@@ -1,31 +1,33 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getProjectBySlug, projects } from "@/data/projects";
-
-export function generateStaticParams() {
-  return projects.map((project) => ({ slug: project.slug }));
-}
+import { Suspense } from "react";
+import { connection } from "next/server";
+import { getProjectBySlug } from "@/lib/projectStore";
 
 export async function generateMetadata(
   props: PageProps<"/projects/[slug]">,
 ): Promise<Metadata> {
+  await connection();
   const { slug } = await props.params;
-  const project = getProjectBySlug(slug);
+  const project = await getProjectBySlug(slug);
   return { title: project ? project.title : "Project" };
 }
 
-export default async function ProjectPage(
-  props: PageProps<"/projects/[slug]">,
-) {
-  const { slug } = await props.params;
-  const project = getProjectBySlug(slug);
+async function ProjectContent({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  await connection();
+  const { slug } = await params;
+  const project = await getProjectBySlug(slug);
 
   if (!project) {
     notFound();
   }
 
   return (
-    <div className="mx-auto w-full max-w-4xl px-6 py-16">
+    <div>
       <p className="text-sm text-zinc-500 dark:text-zinc-400">Project</p>
       <h1 className="mt-2 text-3xl font-semibold tracking-tight">
         {project.title}
@@ -59,6 +61,20 @@ export default async function ProjectPage(
       >
         View Project
       </a>
+    </div>
+  );
+}
+
+function ProjectSkeleton() {
+  return <p className="text-zinc-600 dark:text-zinc-400">Loading project…</p>;
+}
+
+export default function ProjectPage(props: PageProps<"/projects/[slug]">) {
+  return (
+    <div className="mx-auto w-full max-w-4xl px-6 py-16">
+      <Suspense fallback={<ProjectSkeleton />}>
+        <ProjectContent params={props.params} />
+      </Suspense>
     </div>
   );
 }
