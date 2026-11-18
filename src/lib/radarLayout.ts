@@ -10,6 +10,7 @@ export type RadarPoint = {
 export const VIEW_SIZE = 800;
 export const CENTER = VIEW_SIZE / 2;
 export const BORDER_MARGIN = 20;
+export const AXIS_MARGIN = 40;
 export const MIN_DISTANCE = 32;
 
 export const RING_BANDS = [
@@ -49,34 +50,46 @@ function candidatesForCell(
   const band = RING_BANDS[ringIndex];
   const candidates: CellCandidate[] = [];
 
-  for (let row = 0; ; row++) {
-    const r = band.outer - BORDER_MARGIN - row * MIN_DISTANCE;
-    if (r < band.inner + BORDER_MARGIN) {
-      break;
-    }
+  const radiusMin = band.inner + BORDER_MARGIN;
+  const radiusMax = band.outer - BORDER_MARGIN;
+  const radiusMid = (band.inner + band.outer) / 2;
 
-    const angleMin = Math.asin(Math.min(1, BORDER_MARGIN / r));
+  function addRow(r: number) {
+    const angleMin = Math.asin(Math.min(1, AXIS_MARGIN / r));
     const angleMax = Math.PI / 2 - angleMin;
     const span = angleMax - angleMin;
+    if (span <= 0) {
+      return;
+    }
+
     const count = Math.floor((span * r) / MIN_DISTANCE) + 1;
 
     for (let i = 0; i < count; i++) {
-      let phi: number;
-      if (count > 1) {
-        const slot = span / (count - 1);
-        phi = angleMin + i * slot + (row % 2 === 1 ? slot / 2 : 0);
-        if (phi > angleMax) {
-          continue;
-        }
-      } else {
-        phi = (angleMin + angleMax) / 2 + (row % 2 === 1 ? span / 4 : 0);
-      }
-
+      const slot = count > 1 ? span / (count - 1) : 0;
+      const phi = Math.PI / 4 + (i - (count - 1) / 2) * slot;
       const angle = quadrant.startAngle + phi;
       candidates.push({
         x: CENTER + r * Math.cos(angle),
         y: CENTER + r * Math.sin(angle),
       });
+    }
+  }
+
+  for (let step = 0; ; step++) {
+    const outward = radiusMid + step * MIN_DISTANCE;
+    const inward = radiusMid - step * MIN_DISTANCE;
+    const outwardValid = outward <= radiusMax;
+    const inwardValid = inward >= radiusMin;
+
+    if (!outwardValid && !inwardValid) {
+      break;
+    }
+
+    if (outwardValid) {
+      addRow(outward);
+    }
+    if (inwardValid && step > 0) {
+      addRow(inward);
     }
   }
 

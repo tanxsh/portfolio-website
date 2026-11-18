@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { RadarItem } from "./radarStore";
 import {
+  AXIS_MARGIN,
   BORDER_MARGIN,
   CENTER,
   MIN_DISTANCE,
@@ -23,26 +24,65 @@ function item(name: string, category: string, ring: string): RadarItem {
 }
 
 const fixture: RadarItem[] = [
-  item("Python", "Languages", "Adopt"),
-  item("SQL", "Languages", "Adopt"),
-  item("FastAPI", "Frameworks & Libraries", "Adopt"),
-  item("Next.js", "Frameworks & Libraries", "Adopt"),
-  item("ChromaDB", "Platforms & Tools", "Adopt"),
-  item("Hybrid search with reranking", "Techniques", "Adopt"),
-  item("R", "Languages", "Trial"),
-  item("TypeScript", "Languages", "Trial"),
-  item("LangGraph", "Frameworks & Libraries", "Trial"),
-  item("LangChain", "Frameworks & Libraries", "Trial"),
-  item("Docker", "Platforms & Tools", "Trial"),
-  item("LLM-as-a-judge", "Techniques", "Trial"),
-  item("Julia", "Languages", "Assess"),
-  item("Streamlit", "Frameworks & Libraries", "Assess"),
-  item("Kubernetes", "Platforms & Tools", "Assess"),
-  item("LLM-as-a-judge v2", "Techniques", "Assess"),
   item("MATLAB", "Languages", "Hold"),
-  item("Angular", "Frameworks & Libraries", "Hold"),
+  item("LangGraph", "Frameworks & Libraries", "Trial"),
+  item("Python", "Languages", "Adopt"),
   item("Airflow", "Platforms & Tools", "Hold"),
+  item("SQL", "Languages", "Adopt"),
+  item("Kubernetes", "Platforms & Tools", "Assess"),
+  item("FastAPI", "Frameworks & Libraries", "Adopt"),
+  item("LangChain", "Frameworks & Libraries", "Trial"),
+  item("ChromaDB", "Platforms & Tools", "Adopt"),
   item("CRISP-DM", "Techniques", "Hold"),
+  item("Hybrid search with reranking", "Techniques", "Adopt"),
+  item("Next.js", "Frameworks & Libraries", "Trial"),
+  item("R", "Languages", "Trial"),
+  item("SOAP", "Techniques", "Hold"),
+  item("Streamlit", "Frameworks & Libraries", "Assess"),
+  item("Remix", "Frameworks & Libraries", "Trial"),
+  item("TypeScript", "Languages", "Trial"),
+  item("Waterfall", "Techniques", "Hold"),
+  item("Docker", "Platforms & Tools", "Trial"),
+  item("Manual testing", "Techniques", "Hold"),
+  item("Julia", "Languages", "Assess"),
+  item("Astro", "Frameworks & Libraries", "Trial"),
+  item("LLM-as-a-judge", "Techniques", "Trial"),
+  item("Monolith-first", "Techniques", "Hold"),
+  item("dbt", "Platforms & Tools", "Assess"),
+  item("Express", "Frameworks & Libraries", "Trial"),
+  item("Angular", "Frameworks & Libraries", "Hold"),
+  item("Feature store", "Techniques", "Assess"),
+];
+
+const expectedNumbering = [
+  "Python",
+  "SQL",
+  "FastAPI",
+  "ChromaDB",
+  "Hybrid search with reranking",
+  "LangGraph",
+  "LangChain",
+  "Next.js",
+  "R",
+  "Remix",
+  "TypeScript",
+  "Docker",
+  "Astro",
+  "LLM-as-a-judge",
+  "Express",
+  "Kubernetes",
+  "Streamlit",
+  "Julia",
+  "dbt",
+  "Feature store",
+  "MATLAB",
+  "Airflow",
+  "CRISP-DM",
+  "SOAP",
+  "Waterfall",
+  "Manual testing",
+  "Monolith-first",
+  "Angular",
 ];
 
 describe("layoutRadar", () => {
@@ -60,28 +100,6 @@ describe("layoutRadar", () => {
 
   it("numbers items in ring order (Adopt, Trial, Assess, Hold), then input order", () => {
     const points = layoutRadar(fixture);
-    const expectedOrder = [
-      "Python",
-      "SQL",
-      "FastAPI",
-      "Next.js",
-      "ChromaDB",
-      "Hybrid search with reranking",
-      "R",
-      "TypeScript",
-      "LangGraph",
-      "LangChain",
-      "Docker",
-      "LLM-as-a-judge",
-      "Julia",
-      "Streamlit",
-      "Kubernetes",
-      "LLM-as-a-judge v2",
-      "MATLAB",
-      "Angular",
-      "Airflow",
-      "CRISP-DM",
-    ];
     const nameById = new Map(fixture.map((item) => [item.id, item.name]));
 
     const orderedNames = points
@@ -89,7 +107,7 @@ describe("layoutRadar", () => {
       .sort((a, b) => a.number - b.number)
       .map((point) => nameById.get(point.id));
 
-    expect(orderedNames).toEqual(expectedOrder);
+    expect(orderedNames).toEqual(expectedNumbering);
   });
 
   it("places every dot in its correct quadrant", () => {
@@ -118,6 +136,19 @@ describe("layoutRadar", () => {
           expect(point.y).toBeGreaterThan(CENTER);
           break;
       }
+    }
+  });
+
+  it("keeps every dot at least 40px from both axis lines", () => {
+    const points = layoutRadar(fixture);
+
+    for (const point of points) {
+      expect(Math.abs(point.x - CENTER)).toBeGreaterThanOrEqual(
+        AXIS_MARGIN - 1e-6,
+      );
+      expect(Math.abs(point.y - CENTER)).toBeGreaterThanOrEqual(
+        AXIS_MARGIN - 1e-6,
+      );
     }
   });
 
