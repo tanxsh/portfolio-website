@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import ContactForm from "@/components/ContactForm";
+import ContactSection from "@/components/ContactSection";
 
 export const metadata: Metadata = {
   title: "Contact Me",
@@ -12,7 +12,7 @@ export default function ContactMePage() {
       <p className="mt-2 text-zinc-600 dark:text-zinc-400">
         Send me a message and I&apos;ll get back to you.
       </p>
-      <ContactForm endpoint="/api/contact" />
+      <ContactSection endpoint="/api/contact" />
     </div>
   );
 }
