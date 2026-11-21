@@ -27,13 +27,37 @@ Open http://localhost:3000 in your browser.
 | ------------------------------ | -------------------------------------- |
 | `/`                            | Landing page                           |
 | `/about-me`                    | Bio, skills, education                 |
-| `/projects`                    | Project cards, linked from `src/data/projects.ts` |
+| `/projects`                    | Project cards, served from `data/projects.json` through `src/lib/projectStore.ts` |
 | `/projects/[slug]`             | Project detail (unknown slugs get a friendly `not-found.tsx`) |
 | `/blogs`                       | Blog list, fetched client-side from `/api/blogs` |
 | `/blogs/[slug]`                | Blog post detail, read at request time (unknown slugs get a friendly `not-found.tsx`) |
-| `/admin/blogs`                 | Form to publish a post via `/api/blogs` |
+| `/radar`                       | Interactive Tech Radar: chart, ring guide, category filter, All items list |
+| `/admin`                       | Admin hub linking to the four admin pages |
+| `/admin/blogs`                 | Publish, edit and delete posts via `/api/blogs` |
+| `/admin/projects`              | Publish, edit and delete projects via `/api/projects` |
+| `/admin/contacts`              | Read, update and delete submissions via `/api/contact` |
+| `/admin/radar`                 | Publish, edit and delete radar items via `/api/radar` |
 | `/contact-me`                  | Contact form posting to `/api/contact` |
 | `/contact-me-server-form`      | Contact form posting to the API below  |
+
+## API
+
+All endpoints are JSON in and JSON out. Every handler logs `METHOD path status`
+(for example `POST /api/blogs 201`) to the server console.
+
+| Endpoint                  | Methods        | Status codes |
+| ------------------------- | -------------- | ------------ |
+| `/api/contact`            | `GET`, `POST`  | `200`, `201`, `400`, `500` |
+| `/api/contact-server-form`| `POST`         | `201`, `400`, `500` |
+| `/api/blogs`              | `GET`, `POST`  | `200`, `201`, `400`, `500` |
+| `/api/projects`           | `GET`, `POST`  | `200`, `201`, `400`, `500` |
+| `/api/radar`              | `GET`, `POST`  | `200`, `201`, `400`, `500` |
+| `/api/contact/[id]`       | `GET`, `PUT`, `DELETE` | `200`, `400`, `404`, `500` |
+| `/api/blogs/[id]`         | `GET`, `PUT`, `DELETE` | `200`, `400`, `404`, `500` |
+| `/api/projects/[id]`      | `GET`, `PUT`, `DELETE` | `200`, `400`, `404`, `500` |
+| `/api/radar/[id]`         | `GET`, `PUT`, `DELETE` | `200`, `400`, `404`, `500` |
+
+`400` means invalid JSON or failed validation (the body contains `{ error, errors }` with field errors), `404` an unknown id (`{ error: "… not found." }`), and `500` a storage failure. `GET` responses are never cached.
 
 ## Architecture
 
@@ -91,14 +115,86 @@ Notes:
 - Validation rules live only in `src/lib/validateContact.ts` (the server is
   the source of truth); `ContactForm` renders whatever errors the API returns
   and performs no client-side validation.
-- `data/contacts.json` is runtime data (committed as an empty `[]`; the app
-  appends submissions to it).
 - Blog posts live in `data/blogs.json` and are served by `/api/blogs`
   (`GET` returns posts newest-first and is never cached; `POST` creates one),
   handled by `src/lib/blogRequest.ts`. Both stores share the JSON file
   helpers in `src/lib/jsonFileStore.ts`.
-- `/admin/blogs` has no authentication (not required by the assignment), so
-  anyone who knows the URL can publish a post.
+- The `/admin/*` pages have no authentication (not required by the
+  assignment), so anyone who knows the URL can edit the content.
+- `data/contacts.json`, `data/blogs.json`, `data/projects.json` and
+  `data/radar.json` are runtime data (committed as empty `[]` or seeded
+  content; the app appends to and edits them at runtime).
+
+### Tech Radar (custom backend feature)
+
+The Tech Radar is an interactive chart of tools and skills, fully backed by
+the custom API.
+
+```mermaid
+flowchart TD
+    A["/radar page"] --> B["RadarView.tsx<br/>fetches /api/radar, holds the selection state"]
+    B --> C["RadarBoard.tsx<br/>layout, category filter"]
+    C --> D["RadarChart.tsx"]
+    C --> E["RadarLegend.tsx"]
+    C --> F["RadarTooltip.tsx"]
+    D -->|props| C
+    E -->|props| C
+    F -->|props| C
+    G["/admin/radar<br/>RadarForm.tsx"] -->|POST / PUT / DELETE| H["/api/radar"]
+    H --> I["radarRequest.ts"]
+    I --> J["validateRadarItem.ts"]
+    J --> K["radarStore.ts"]
+    K --> L[("data/radar.json")]
+    B -->|"GET"| H
+```
+
+- `radarLayout.ts` is a pure function that places every item on the 800×800
+  chart (rings, quadrants, numbering, collision-free spacing).
+- `categoryStyles.ts` is the single source of truth for the four category
+  colors used by the chart, legend, filter and tooltip.
+
+### LocalStorage contact outbox
+
+If the contact form cannot reach the server, the message is queued in the
+browser and can be retried later.
+
+```mermaid
+flowchart TD
+    A["ContactForm submit"] -->|network error or 5xx| B["onQueue"]
+    B --> C["useOutbox.queue"]
+    C --> D["outbox.ts addToOutbox"]
+    D --> E[("localStorage<br/>portfolio.contactOutbox.v1")]
+    F["page load"] --> G["useOutbox<br/>loadOutbox in useEffect"]
+    G --> H["ContactSection<br/>passes items as props"]
+    H --> I["OutboxPanel.tsx"]
+    I -->|Retry| J["POST to the endpoint"]
+    J -->|201| K["removeFromOutbox"]
+    J -->|400 or failure| E
+```
+
+- Data handling: on load, an empty or missing key, corrupt JSON, JSON that is
+  not an array, and wrong-shape entries are dropped and counted; the panel
+  tells the user how many saved messages were removed.
+- `400` responses (validation errors) are never queued — they are shown as
+  field errors; only network errors and 5xx responses are queued.
+- Limits of LocalStorage: it is per browser and per device (a message queued
+  in Chrome on one laptop will not appear in Safari or on a phone), it stores
+  plain text, it holds about 5 MB per origin, and the user (or a private
+  window) can clear it at any time.
+
+## Components
+
+| Component | Props | What it does |
+| --------- | ----- | ------------ |
+| `ProjectCard.tsx` | `project: Project` | One project card: link, title, summary, tech pills. |
+| `BlogCard.tsx` | `post: BlogPost` | One blog card: link, title, formatted date, excerpt. |
+| `RadarBoard.tsx` | `items, selectedId, onSelect, hoveredId, onHover, selectedCategory, onSelectCategory` | Lays out the radar page: ring guide, chart, filter, All items list. |
+| `RadarChart.tsx` | `items, selectedId, onSelect, hoveredId, onHover, selectedCategory` | The SVG radar: rings, quadrants, dots, sweep, tooltips. |
+| `RadarLegend.tsx` | `items, selectedId, onSelect, hoveredId, onHover, selectedCategory` | The four ring columns of All items. |
+| `RadarTooltip.tsx` | `item, x, y` | The info card shown for the active radar item. |
+| `ContactSection.tsx` | `endpoint: string` | Wires `ContactForm` and `OutboxPanel` to one `useOutbox`. |
+| `OutboxPanel.tsx` | `items, discarded, ready, onRetry, onDiscard, onRetryAll` | Lists unsent messages with Retry / Discard actions. |
+| `ContactForm.tsx` | `endpoint?: string`, `onQueue?: (fields) => void` | The contact form; queues the message on network errors or 5xx. |
 
 ## Part 2: Critique of the generated code
 
