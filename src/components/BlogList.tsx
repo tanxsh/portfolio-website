@@ -1,8 +1,7 @@
 "use client";
 
-import Link from "next/link";
 import { useEffect, useState } from "react";
-import { formatDate } from "@/lib/blogFormat";
+import BlogCard from "@/components/BlogCard";
 import type { BlogPost } from "@/lib/blogStore";
 
 export default function BlogList() {
@@ -58,22 +57,7 @@ export default function BlogList() {
       {posts !== null && posts.length > 0 && (
         <ul className="mt-8 flex flex-col gap-4">
           {posts.map((post) => (
-            <li key={post.id}>
-              <Link
-                href={`/blogs/${post.slug}`}
-                className="card block"
-              >
-                <h2 className="text-base font-medium text-foreground">
-                  {post.title}
-                </h2>
-                <p className="mt-1 text-xs text-accent">
-                  {formatDate(post.createdAt)}
-                </p>
-                <p className="mt-2 text-sm leading-6 text-muted">
-                  {post.excerpt}
-                </p>
-              </Link>
-            </li>
+            <BlogCard key={post.id} post={post} />
           ))}
         </ul>
       )}

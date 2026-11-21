@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { Suspense } from "react";
 import { connection } from "next/server";
+import ProjectCard from "@/components/ProjectCard";
 import { listProjects } from "@/lib/projectStore";
 
 export const metadata: Metadata = {
@@ -21,26 +21,7 @@ async function ProjectsList() {
   return (
     <ul className="mt-8 grid gap-4 sm:grid-cols-2">
       {projects.map((project) => (
-        <li key={project.slug} className="h-full">
-          <Link
-            href={`/projects/${project.slug}`}
-            className="card flex h-full flex-col"
-          >
-            <h2 className="text-base font-medium text-foreground">
-              {project.title}
-            </h2>
-            <p className="mt-2 flex-1 text-sm leading-6 text-muted">
-              {project.summary}
-            </p>
-            <ul className="mt-4 flex flex-wrap gap-2">
-              {project.tech.map((item) => (
-                <li key={item} className="pill">
-                  {item}
-                </li>
-              ))}
-            </ul>
-          </Link>
-        </li>
+        <ProjectCard key={project.slug} project={project} />
       ))}
     </ul>
   );
