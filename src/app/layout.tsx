@@ -9,7 +9,7 @@ function NavbarFallback() {
     <header className="sticky top-0 z-50 border-b border-edge bg-background/80 backdrop-blur">
       <nav className="mx-auto w-full max-w-4xl px-6 py-3">
         <span className="text-lg font-semibold tracking-tight">
-          My Portfolio
+          Tanish Jagadheshan
         </span>
       </nav>
     </header>

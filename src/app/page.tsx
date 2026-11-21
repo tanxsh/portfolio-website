@@ -29,24 +29,6 @@ export default function Home() {
             Get in Touch
           </Link>
         </div>
-        <div className="mt-6 flex flex-wrap gap-5 text-sm">
-          <a
-            href="https://github.com/tanxsh"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="font-medium text-accent hover:underline"
-          >
-            GitHub
-          </a>
-          <a
-            href="https://www.linkedin.com/in/tanish-j"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="font-medium text-accent hover:underline"
-          >
-            LinkedIn
-          </a>
-        </div>
       </div>
     </section>
   );
