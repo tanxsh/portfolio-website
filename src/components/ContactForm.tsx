@@ -34,6 +34,9 @@ type FieldProps = {
 
 const initialValues: FormValues = { name: "", email: "", message: "" };
 
+const OFFLINE_MESSAGE =
+  "Couldn't reach the server. Your message is saved on this device and will be sent when you retry.";
+
 function Field({
   id,
   label,
@@ -92,15 +95,18 @@ function Field({
 
 type ContactFormProps = {
   endpoint?: string;
+  onQueue?: (fields: FormValues) => void;
 };
 
 export default function ContactForm({
   endpoint = "/api/contact-server-form",
+  onQueue,
 }: ContactFormProps) {
   const [values, setValues] = useState<FormValues>(initialValues);
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [failureMessage, setFailureMessage] = useState<string | null>(null);
+  const [warningMessage, setWarningMessage] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
   function handleFieldChange(field: keyof FormValues) {
@@ -116,6 +122,7 @@ export default function ContactForm({
     setSubmitting(true);
     setSuccessMessage(null);
     setFailureMessage(null);
+    setWarningMessage(null);
     setFieldErrors({});
 
     try {
@@ -137,6 +144,10 @@ export default function ContactForm({
         setValues(initialValues);
       } else if (response.status === 400 && parsed?.errors) {
         setFieldErrors(parsed.errors);
+      } else if (response.status >= 500 && onQueue) {
+        onQueue(values);
+        setValues(initialValues);
+        setWarningMessage(OFFLINE_MESSAGE);
       } else {
         setFailureMessage(
           typeof parsed?.error === "string"
@@ -145,9 +156,15 @@ export default function ContactForm({
         );
       }
     } catch {
-      setFailureMessage(
-        "Network error. Please check your connection and try again.",
-      );
+      if (onQueue) {
+        onQueue(values);
+        setValues(initialValues);
+        setWarningMessage(OFFLINE_MESSAGE);
+      } else {
+        setFailureMessage(
+          "Network error. Please check your connection and try again.",
+        );
+      }
     } finally {
       setSubmitting(false);
     }
@@ -174,6 +191,15 @@ export default function ContactForm({
           className="banner-error"
         >
           {failureMessage}
+        </p>
+      )}
+
+      {warningMessage && (
+        <p
+          role="status"
+          className="banner-warning"
+        >
+          {warningMessage}
         </p>
       )}
 
